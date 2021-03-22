@@ -1,5 +1,6 @@
-import { render } from 'react-dom'
 import { StrictMode } from 'react'
+import { render } from 'react-dom'
+
 import reportWebVitals from './reportWebVitals'
 import Root from './root/Root'
 
