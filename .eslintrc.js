@@ -23,7 +23,25 @@ const base = {
     'react/react-in-jsx-scope': 'off',
     'react/self-closing-comp': 'error',
     'simple-import-sort/exports': 'error',
-    'simple-import-sort/imports': 'error',
+    'simple-import-sort/imports': [
+      'error',
+      {
+        groups: [
+          // Side effect imports.
+          ['^\\u0000'],
+          // Packages.
+          // Things that start with a letter (or digit or underscore), or `@` followed by a letter.
+          ['^@?\\w'],
+          // Absolute imports.
+          ['^app', '^assets', '^components', '^containers', '^store', '^'],
+          // Anything not matched in another group.
+          ['^'],
+          // Relative imports.
+          // Anything that starts with a dot.
+          ['^\\.'],
+        ],
+      },
+    ],
     'sort-destructure-keys/sort-destructure-keys': 'error',
     'sort-keys-fix/sort-keys-fix': 'error',
     'unused-imports/no-unused-imports': 'error',
