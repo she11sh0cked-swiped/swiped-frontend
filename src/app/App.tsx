@@ -1,7 +1,7 @@
 import CssBaseline from '@material-ui/core/CssBaseline'
 import { FC } from 'react'
 
-const Root: FC = () => {
+const App: FC = () => {
   return (
     <>
       <CssBaseline />
@@ -9,4 +9,4 @@ const Root: FC = () => {
   )
 }
 
-export default Root
+export default App

@@ -1,12 +1,13 @@
 import { StrictMode } from 'react'
 import { render } from 'react-dom'
 
+import App from 'app/App'
+
 import reportWebVitals from './reportWebVitals'
-import Root from './root/Root'
 
 render(
   <StrictMode>
-    <Root />
+    <App />
   </StrictMode>,
   document.getElementById('root')
 )
