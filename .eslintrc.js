@@ -34,7 +34,15 @@ const base = {
           // Things that start with a letter (or digit or underscore), or `@` followed by a letter.
           ['^@?\\w'],
           // Absolute imports.
-          ['^app', '^assets', '^components', '^containers', '^store', '^'],
+          [
+            '^app',
+            '^assets',
+            '^components',
+            '^containers',
+            '^store',
+            '^utils',
+            '^',
+          ],
           // Anything not matched in another group.
           ['^'],
           // Relative imports.
