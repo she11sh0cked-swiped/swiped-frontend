@@ -1,4 +1,4 @@
-import 'fontsource-roboto'
+import '@fontsource/roboto'
 
 import { CssBaseline, ThemeProvider } from '@material-ui/core'
 import { FC } from 'react'
