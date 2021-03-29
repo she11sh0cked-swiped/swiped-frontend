@@ -5,6 +5,8 @@ export default createMuiTheme({
     MuiCssBaseline: {
       '@global': {
         '#root': {
+          display: 'grid',
+          gridTemplateRows: 'max-content auto',
           height: '100%',
           overflow: 'hidden',
           position: 'fixed',
