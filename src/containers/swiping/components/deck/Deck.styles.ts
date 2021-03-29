@@ -13,6 +13,7 @@ export default makeStyles({
       left: 0,
       position: 'absolute',
       right: 0,
+      zIndex: 1100,
     },
     position: 'relative',
   },
