@@ -8,7 +8,12 @@ import {
 } from '@material-ui/core'
 import { observer } from 'mobx-react'
 import { FC, lazy, Suspense } from 'react'
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+import {
+  BrowserRouter as Router,
+  Redirect,
+  Route,
+  Switch,
+} from 'react-router-dom'
 
 import Loading from 'containers/loading/Loading'
 import app from 'store/App'
@@ -29,6 +34,7 @@ const App: FC = () => {
           <Suspense fallback={<Loading />}>
             <Switch>
               <Route exact path="/:groupId/swiping" component={Swiping} />
+              <Redirect to="/" />
             </Switch>
           </Suspense>
         </Container>
