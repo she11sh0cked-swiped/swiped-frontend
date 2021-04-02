@@ -19,7 +19,7 @@ const Card: FC<IProps> = ({ image, title }) => {
   const classes = useStyles()
 
   return (
-    <MaterialCard className={classes.root}>
+    <MaterialCard className={classes.root} raised>
       <CardActionArea>
         <CardMedia image={image} />
         <CardContent className={classes.content}>
