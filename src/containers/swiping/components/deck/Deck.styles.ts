@@ -1,6 +1,12 @@
 import { makeStyles } from '@material-ui/core'
 
 export default makeStyles({
+  info: {
+    bottom: 0,
+    margin: '0.5em',
+    position: 'absolute',
+    right: 0,
+  },
   root: {
     '& > div': {
       '& > div': {

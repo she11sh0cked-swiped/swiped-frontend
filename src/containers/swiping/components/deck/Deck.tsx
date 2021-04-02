@@ -1,3 +1,4 @@
+import { Info } from '@material-ui/icons'
 import { FC, useCallback, useEffect, useMemo, useState } from 'react'
 import { animated, useSprings } from 'react-spring'
 import { useDrag } from 'react-use-gesture'
@@ -183,7 +184,9 @@ const Deck: FC<IProps> = ({ groupId, registerControls }) => {
                 {...(card.i === currentCard?.i ? bind() : {})} // We're only interested in changing spring-data for the current spring
                 style={{ rotateZ: rot, scale }}
               >
-                <Card key={card.data.id} {...card.data} />
+                <Card key={card.data.id} {...card.data}>
+                  <Info className={classes.info} />
+                </Card>
               </animated.div>
             </animated.div>
           )

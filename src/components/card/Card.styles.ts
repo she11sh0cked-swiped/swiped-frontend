@@ -9,12 +9,6 @@ export default makeStyles({
     position: 'absolute',
     width: '100%',
   },
-  info: {
-    bottom: 0,
-    margin: '0.5em',
-    position: 'absolute',
-    right: 0,
-  },
   root: {
     '& > .MuiCardActionArea-root': {
       '& > .MuiCardMedia-root': {
