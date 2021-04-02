@@ -2,9 +2,9 @@ import { FC, useCallback, useEffect, useMemo, useState } from 'react'
 import { animated, useSprings } from 'react-spring'
 import { useDrag } from 'react-use-gesture'
 
+import Card from 'components/card/Card'
 import * as mock from 'utils/mock'
 
-import Card from '../card/Card'
 import useStyles from './Deck.styles'
 
 // These two are just helpers, they curate spring data, values that are later being interpolated into css

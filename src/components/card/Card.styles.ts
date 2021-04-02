@@ -18,12 +18,11 @@ export default makeStyles({
   root: {
     '& > .MuiCardActionArea-root': {
       '& > .MuiCardMedia-root': {
-        height: '100%',
+        height: 'inherit',
       },
-
-      height: '100%',
+      height: 'inherit',
     },
-
     height: '100%',
+    width: '100%',
   },
 })
