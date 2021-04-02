@@ -4,9 +4,6 @@ export default makeStyles({
   root: {
     '& > div': {
       '& > div': {
-        '& > div': {
-          height: 'inherit',
-        },
         height: 'inherit',
       },
       height: '100%',
