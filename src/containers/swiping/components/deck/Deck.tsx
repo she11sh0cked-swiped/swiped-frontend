@@ -1,9 +1,10 @@
+import { CardActionArea, CardContent, Typography } from '@material-ui/core'
 import { Info } from '@material-ui/icons'
 import { FC, useCallback, useEffect, useMemo, useState } from 'react'
 import { animated, useSprings } from 'react-spring'
 import { useDrag } from 'react-use-gesture'
 
-import Card from 'components/card/Card'
+import ImageCard from 'components/imageCard/ImageCard'
 import * as mock from 'utils/mock'
 
 import useStyles from './Deck.styles'
@@ -184,9 +185,16 @@ const Deck: FC<IProps> = ({ groupId, registerControls }) => {
                 {...(card.i === currentCard?.i ? bind() : {})} // We're only interested in changing spring-data for the current spring
                 style={{ rotateZ: rot, scale }}
               >
-                <Card key={card.data.id} {...card.data}>
-                  <Info className={classes.info} />
-                </Card>
+                <ImageCard image={card.data.image} className={classes.card}>
+                  <CardActionArea>
+                    <CardContent>
+                      <Typography component="h2" variant="h5">
+                        {card.data.title}
+                      </Typography>
+                      <Info className={classes.info} />
+                    </CardContent>
+                  </CardActionArea>
+                </ImageCard>
               </animated.div>
             </animated.div>
           )
