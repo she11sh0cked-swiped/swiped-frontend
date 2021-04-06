@@ -30,7 +30,6 @@ interface IControls {
 }
 
 interface IProps {
-  groupId: string
   registerControls(controls: IControls): void
 }
 
@@ -41,7 +40,7 @@ interface ICard {
   like?: boolean
 }
 
-const Deck: FC<IProps> = ({ groupId, registerControls }) => {
+const Deck: FC<IProps> = ({ registerControls }) => {
   const classes = useStyles()
 
   const [movies, setMovies] = useState(mock.movies())
@@ -110,7 +109,6 @@ const Deck: FC<IProps> = ({ groupId, registerControls }) => {
 
   const handleSendVote = useCallback(() => {
     const vote = {
-      groupId,
       votes: cards.map((card) => ({
         like: card.like,
         movieId: card.data.id,
@@ -121,7 +119,7 @@ const Deck: FC<IProps> = ({ groupId, registerControls }) => {
       console.log(vote)
       resolve()
     })
-  }, [cards, groupId])
+  }, [cards])
 
   // Create a gesture, we're interested in down-state, delta (current-pos - click-pos), direction and velocity
   const bind = useDrag(

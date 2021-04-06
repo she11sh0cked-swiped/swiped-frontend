@@ -33,7 +33,7 @@ const App: FC = () => {
         <Container maxWidth="sm">
           <Suspense fallback={<Loading />}>
             <Switch>
-              <Route exact path="/:groupId/swiping" component={Swiping} />
+              <Route exact path="/" component={Swiping} />
               <Redirect to="/" />
             </Switch>
           </Suspense>
