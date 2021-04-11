@@ -25,8 +25,8 @@ const from = () => ({
 })
 
 interface IControls {
-  like: () => void
   dislike: () => void
+  like: () => void
 }
 
 interface IProps {
@@ -36,8 +36,8 @@ interface IProps {
 interface ICard {
   data: IMovie
   i: number
-  visible: boolean
   like?: boolean
+  visible: boolean
 }
 
 const Deck: FC<IProps> = ({ registerControls }) => {

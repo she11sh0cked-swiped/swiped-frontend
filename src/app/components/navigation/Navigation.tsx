@@ -10,11 +10,11 @@ interface IProps {
     icon: SvgIconComponent
     to: string
   }
-  title?: string
   right?: {
     icon: SvgIconComponent
     to: string
   }
+  title?: string
 }
 
 const Navigation: FC<IProps> = ({ left, right, title }) => {
