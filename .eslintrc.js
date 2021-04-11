@@ -77,9 +77,9 @@ const ts = Object.assign({}, base, {
   ],
   files: ['*.ts', '*.tsx'],
   parser: '@typescript-eslint/parser',
-  parserOptions: Object.assign({}, base.parserOptions, {
+  parserOptions: {
     project: './tsconfig.json',
-  }),
+  },
   plugins: [].concat(base.plugins, ['@typescript-eslint']),
   rules: Object.assign({}, base.rules, {
     '@typescript-eslint/no-unused-vars': 'off',
