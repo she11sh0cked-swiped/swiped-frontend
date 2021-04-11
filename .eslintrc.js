@@ -83,6 +83,7 @@ const ts = Object.assign({}, base, {
   plugins: [].concat(base.plugins, ['@typescript-eslint']),
   rules: Object.assign({}, base.rules, {
     '@typescript-eslint/no-unused-vars': 'off',
+    '@typescript-eslint/sort-type-union-intersection-members': 'error',
   }),
 })
 
