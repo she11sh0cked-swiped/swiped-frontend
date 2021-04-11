@@ -11,9 +11,13 @@ interface IProps {
     to: string
   }
   title?: string
+  right?: {
+    icon: SvgIconComponent
+    to: string
+  }
 }
 
-const Navigation: FC<IProps> = ({ left, title }) => {
+const Navigation: FC<IProps> = ({ left, right, title }) => {
   const classes = useStyles()
 
   return (
@@ -36,9 +40,15 @@ const Navigation: FC<IProps> = ({ left, title }) => {
         <Typography variant="h6" className={classes.title}>
           {title}
         </Typography>
-        <IconButton component={Link} to="/profile" edge="end" color="inherit">
-          <AccountCircle />
-        </IconButton>
+        {right ? (
+          <IconButton component={Link} to={right.to} edge="end" color="inherit">
+            <right.icon />
+          </IconButton>
+        ) : (
+          <IconButton edge="end" style={{ color: 'transparent' }}>
+            <AccountCircle />
+          </IconButton>
+        )}
       </Toolbar>
     </AppBar>
   )
