@@ -22,6 +22,7 @@ import Navigation from './components/navigation/Navigation'
 import theme from './theme'
 
 const Swiping = lazy(() => import('containers/swiping/Swiping'))
+const Group = lazy(() => import('containers/group/Group'))
 
 const App: FC = () => {
   return (
@@ -34,6 +35,7 @@ const App: FC = () => {
           <Suspense fallback={<Loading />}>
             <Switch>
               <Route exact path="/" component={Swiping} />
+              <Route exact path="/g/:groupId" component={Group} />
               <Redirect to="/" />
             </Switch>
           </Suspense>
