@@ -10,8 +10,6 @@ const base = {
     'plugin:react-hooks/recommended',
     'prettier',
   ],
-  parser: 'babel-eslint',
-  parserOptions: { ecmaVersion: 6 },
   plugins: [
     'simple-import-sort',
     'sort-keys-fix',
@@ -67,8 +65,7 @@ const base = {
   settings: { react: { version: 'detect' } },
 }
 
-const ts = {
-  ...base,
+const ts = Object.assign({}, base, {
   extends: [
     'eslint:recommended',
     'plugin:react/recommended',
@@ -79,9 +76,13 @@ const ts = {
   ],
   files: ['*.ts', '*.tsx'],
   parser: '@typescript-eslint/parser',
-  parserOptions: { ...base.parserOptions, project: './tsconfig.json' },
-  plugins: [...base.plugins, '@typescript-eslint'],
-  rules: { ...base.rules, '@typescript-eslint/no-unused-vars': 'off' },
-}
+  parserOptions: Object.assign({}, base.parserOptions, {
+    project: './tsconfig.json',
+  }),
+  plugins: [].concat(base.plugins, ['@typescript-eslint']),
+  rules: Object.assign({}, base.rules, {
+    '@typescript-eslint/no-unused-vars': 'off',
+  }),
+})
 
-module.exports = { ...base, overrides: [ts] }
+module.exports = Object.assign({}, base, { overrides: [ts] })
