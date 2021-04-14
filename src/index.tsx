@@ -1,6 +1,7 @@
 import { ApolloProvider } from '@apollo/client'
 import { StrictMode } from 'react'
 import { render } from 'react-dom'
+import { BrowserRouter as Router } from 'react-router-dom'
 
 import apolloClient from 'api/client'
 import App from 'app/App'
@@ -10,7 +11,9 @@ import reportWebVitals from './reportWebVitals'
 render(
   <StrictMode>
     <ApolloProvider client={apolloClient}>
-      <App />
+      <Router>
+        <App />
+      </Router>
     </ApolloProvider>
   </StrictMode>,
   document.getElementById('root')
