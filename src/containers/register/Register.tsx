@@ -56,22 +56,22 @@ const Register: FC<IProps> = () => {
       <form onSubmit={handleForm}>
         <TextField
           {...register('record.username')}
-          margin="normal"
+          autoComplete="email"
+          autoFocus
           fullWidth
           label="Username"
-          autoFocus
+          margin="normal"
           required
-          autoComplete="email"
           size="small"
           variant="outlined"
         />
         <TextField
           {...register('record.password')}
+          autoComplete="current-password"
           fullWidth
+          label="Password"
           margin="normal"
           required
-          label="Password"
-          autoComplete="current-password"
           size="small"
           type="password"
           variant="outlined"
@@ -82,20 +82,20 @@ const Register: FC<IProps> = () => {
               value === getValues('record.password') ||
               'The passwords do not match',
           })}
-          fullWidth
-          required
-          margin="normal"
-          label="Confirm Password"
           autoComplete="current-password"
+          fullWidth
+          label="Confirm Password"
+          margin="normal"
+          required
           size="small"
           type="password"
           variant="outlined"
         />
         <Button
           className={classes.submit}
+          color="primary"
           fullWidth
           type="submit"
-          color="primary"
           variant="contained"
         >
           Sign Up

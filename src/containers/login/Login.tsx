@@ -61,40 +61,40 @@ const Login: FC<IProps> = () => {
       <form onSubmit={handleForm}>
         <TextField
           {...register('username')}
-          margin="normal"
+          autoComplete="email"
+          autoFocus
           fullWidth
           label="Username"
+          margin="normal"
           required
-          autoFocus
-          autoComplete="email"
           size="small"
           variant="outlined"
         />
         <TextField
           {...register('password')}
-          fullWidth
-          margin="normal"
-          label="Password"
-          required
           autoComplete="current-password"
+          fullWidth
+          label="Password"
+          margin="normal"
+          required
           size="small"
           type="password"
           variant="outlined"
         />
         <Button
           className={classes.submit}
+          color="primary"
           fullWidth
           type="submit"
-          color="primary"
           variant="contained"
         >
           Sign In
         </Button>
         <MaterialLink
-          to="/register"
-          component={Link}
-          variant="body2"
           className={classes.register}
+          component={Link}
+          to="/register"
+          variant="body2"
         >
           Don&apos;t have an account? Sign Up
         </MaterialLink>

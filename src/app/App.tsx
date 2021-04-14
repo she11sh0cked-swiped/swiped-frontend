@@ -39,24 +39,24 @@ const App: FC = () => {
         <Suspense fallback={<Loading />}>
           <Switch>
             <Route
+              component={lazy(() => import('containers/swiping/Swiping'))}
               exact
               path="/"
-              component={lazy(() => import('containers/swiping/Swiping'))}
             />
             <Route
+              component={lazy(() => import('containers/login/Login'))}
               exact
               path="/login"
-              component={lazy(() => import('containers/login/Login'))}
             />
             <Route
+              component={lazy(() => import('containers/register/Register'))}
               exact
               path="/register"
-              component={lazy(() => import('containers/register/Register'))}
             />
             <Route
+              component={lazy(() => import('containers/group/Group'))}
               exact
               path="/g/:groupId"
-              component={lazy(() => import('containers/group/Group'))}
             />
             <Redirect to="/" />
           </Switch>

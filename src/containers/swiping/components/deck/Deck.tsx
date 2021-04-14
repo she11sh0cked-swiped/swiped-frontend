@@ -184,7 +184,7 @@ const Deck: FC<IProps> = ({ registerControls }) => {
                 {...(card.i === currentCard?.i ? bind() : {})} // We're only interested in changing spring-data for the current spring
                 style={{ rotateZ: rot, scale }}
               >
-                <ImageCard image={card.data.image} className={classes.card}>
+                <ImageCard className={classes.card} image={card.data.image}>
                   <CardActionArea>
                     <CardContent>
                       <Typography component="h2" variant="h5">

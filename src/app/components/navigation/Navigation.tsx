@@ -25,10 +25,10 @@ const Navigation: FC<IProps> = ({ left, right, title }) => {
       <Toolbar>
         {left ? (
           <IconButton
-            component={Link}
-            to={left.to}
-            edge="start"
             color="inherit"
+            component={Link}
+            edge="start"
+            to={left.to}
           >
             <left.icon />
           </IconButton>
@@ -37,11 +37,11 @@ const Navigation: FC<IProps> = ({ left, right, title }) => {
             <AccountCircle />
           </IconButton>
         )}
-        <Typography variant="h6" className={classes.title}>
+        <Typography className={classes.title} variant="h6">
           {title}
         </Typography>
         {right ? (
-          <IconButton component={Link} to={right.to} edge="end" color="inherit">
+          <IconButton color="inherit" component={Link} edge="end" to={right.to}>
             <right.icon />
           </IconButton>
         ) : (

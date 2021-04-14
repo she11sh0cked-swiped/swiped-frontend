@@ -4,8 +4,8 @@ import { FC } from 'react'
 const Loading: FC = () => {
   return (
     <Box
-      display="flex"
       alignItems="center"
+      display="flex"
       justifyContent="center"
       minHeight="100%"
     >

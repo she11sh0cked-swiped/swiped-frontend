@@ -53,7 +53,7 @@ const List: FC<IProps> = () => {
 
         return (
           <ListItem key={match.data.id}>
-            <ImageCard image={match.data.image} className={classes.card}>
+            <ImageCard className={classes.card} image={match.data.image}>
               <CardActionArea>
                 <CardContent>
                   <Typography component="h2" variant="h5">
@@ -63,9 +63,9 @@ const List: FC<IProps> = () => {
                     <StyledRating
                       color={rating < 5 ? 'red' : 'default'}
                       icon={<Favorite fontSize="inherit" />}
-                      value={rating}
                       precision={0.1}
                       readOnly
+                      value={rating}
                     />
                     <Typography>{match.likes} likes</Typography>
                   </div>
