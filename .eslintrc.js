@@ -33,6 +33,7 @@ const base = {
           ['^@?\\w'],
           // Absolute imports.
           [
+            '^api',
             '^app',
             '^assets',
             '^components',
