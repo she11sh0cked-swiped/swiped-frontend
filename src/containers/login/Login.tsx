@@ -8,7 +8,7 @@ import {
 import { LockOutlined } from '@material-ui/icons'
 import { FC, useCallback, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
-import { Link, useHistory } from 'react-router-dom'
+import { Link, RouteComponentProps, useHistory } from 'react-router-dom'
 
 import { Mutation, MutationUser_LoginArgs } from 'types/api'
 
@@ -16,7 +16,9 @@ import useStyles from './Login.styles'
 
 type TLoginData = Pick<Mutation, 'user_login'>
 
-const Login: FC = () => {
+type IProps = RouteComponentProps
+
+const Login: FC<IProps> = () => {
   const classes = useStyles()
 
   const history = useHistory()

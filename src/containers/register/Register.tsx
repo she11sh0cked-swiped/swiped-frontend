@@ -3,6 +3,7 @@ import { Avatar, Button, TextField } from '@material-ui/core'
 import { LockOutlined } from '@material-ui/icons'
 import { FC, useCallback, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
+import { RouteComponentProps } from 'react-router'
 
 import { Mutation, MutationUser_RegisterArgs } from 'types/api'
 
@@ -10,7 +11,9 @@ import useStyles from './Register.styles'
 
 type TRegisterData = Pick<Mutation, 'user_register'>
 
-const Register: FC = () => {
+type IProps = RouteComponentProps
+
+const Register: FC<IProps> = () => {
   const classes = useStyles()
 
   const { getValues, handleSubmit, register } = useForm<
