@@ -1,3 +1,4 @@
+import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client'
 import { StrictMode } from 'react'
 import { render } from 'react-dom'
 
@@ -5,9 +6,16 @@ import App from 'app/App'
 
 import reportWebVitals from './reportWebVitals'
 
+const apolloClient = new ApolloClient({
+  cache: new InMemoryCache(),
+  uri: '/graphql',
+})
+
 render(
   <StrictMode>
-    <App />
+    <ApolloProvider client={apolloClient}>
+      <App />
+    </ApolloProvider>
   </StrictMode>,
   document.getElementById('root')
 )
