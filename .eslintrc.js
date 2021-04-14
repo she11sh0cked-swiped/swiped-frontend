@@ -38,6 +38,7 @@ const base = {
             '^components',
             '^containers',
             '^store',
+            '^types',
             '^utils',
             '^',
           ],
