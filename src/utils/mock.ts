@@ -1,3 +1,5 @@
+import { IMovie } from 'types/mock'
+
 const id = () => `V1StGXR8_Z5jdHi6B-myT__${Math.random()}`
 
 export const movies = (): IMovie[] =>

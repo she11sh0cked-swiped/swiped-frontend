@@ -1,4 +1,4 @@
-interface IMovie {
+export interface IMovie {
   id: string
   image: string
   title: string

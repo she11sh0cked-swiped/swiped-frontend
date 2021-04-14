@@ -5,6 +5,7 @@ import { animated, useSprings } from 'react-spring'
 import { useDrag } from 'react-use-gesture'
 
 import ImageCard from 'components/imageCard/ImageCard'
+import { IMovie } from 'types/mock'
 import * as mock from 'utils/mock'
 
 import useStyles from './Deck.styles'
