@@ -1,0 +1,13 @@
+config:
+  scalars:
+    MongoID: string
+
+generates:
+  src/types/api.d.ts:
+    plugins:
+      - typescript
+      - typescript-apollo-client-helpers
+
+overwrite: true
+
+schema: http://localhost:4000/graphql
