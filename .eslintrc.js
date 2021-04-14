@@ -18,6 +18,7 @@ const base = {
   ],
   rules: {
     'react/jsx-curly-brace-presence': 'error',
+    'react/jsx-sort-props': 'error',
     'react/prop-types': 'off',
     'react/react-in-jsx-scope': 'off',
     'react/self-closing-comp': 'error',
