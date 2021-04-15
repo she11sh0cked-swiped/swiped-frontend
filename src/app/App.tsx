@@ -1,11 +1,6 @@
 import '@fontsource/roboto'
 
-import {
-  Container,
-  CssBaseline,
-  ThemeProvider,
-  Toolbar,
-} from '@material-ui/core'
+import { Container, CssBaseline, Toolbar } from '@material-ui/core'
 import { observer } from 'mobx-react'
 import { FC, lazy, Suspense, useEffect } from 'react'
 import { Redirect, Route, Switch, useHistory } from 'react-router-dom'
@@ -14,7 +9,7 @@ import Loading from 'containers/loading/Loading'
 import app from 'store/App'
 
 import Navigation from './components/navigation/Navigation'
-import theme from './theme'
+import useNotifier from './hooks/useNotifier'
 
 const noRedirect: Record<string, boolean> = {
   '/login': true,
@@ -22,6 +17,8 @@ const noRedirect: Record<string, boolean> = {
 }
 
 const App: FC = () => {
+  useNotifier()
+
   const history = useHistory()
 
   useEffect(() => {
@@ -31,7 +28,7 @@ const App: FC = () => {
   }, [history])
 
   return (
-    <ThemeProvider theme={theme}>
+    <>
       <CssBaseline />
       <Navigation {...app.navigation} />
       <Toolbar />
@@ -62,7 +59,7 @@ const App: FC = () => {
           </Switch>
         </Suspense>
       </Container>
-    </ThemeProvider>
+    </>
   )
 }
 
