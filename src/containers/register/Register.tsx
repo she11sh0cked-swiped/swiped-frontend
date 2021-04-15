@@ -1,15 +1,13 @@
-import { FetchResult, gql, useMutation } from '@apollo/client'
 import { Avatar, Button, TextField } from '@material-ui/core'
 import { LockOutlined } from '@material-ui/icons'
 import { FC, useCallback } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { RouteComponentProps } from 'react-router'
 
-import { Mutation, MutationUser_RegisterArgs } from 'types/api'
+import { MutationUser_RegisterArgs } from 'types/api.generated'
 
+import { useRegisterMutation } from './api/user.generated'
 import useStyles from './Register.styles'
-
-type TRegisterData = Pick<Mutation, 'user_register'>
 
 type TFields = MutationUser_RegisterArgs & { confirmPassword: string }
 
@@ -22,34 +20,21 @@ const Register: FC<IProps> = ({ history }) => {
     formState: { errors },
     getValues,
     handleSubmit,
-    register,
+    register: formRegister,
   } = useForm<TFields>()
 
-  const [userRegister] = useMutation<TRegisterData, MutationUser_RegisterArgs>(
-    gql`
-      mutation($username: String!, $password: String!) {
-        user_register(username: $username, password: $password) {
-          token
-        }
-      }
-    `
-  )
-
-  const handleRegisterResponse = useCallback(
-    ({ data }: FetchResult<TRegisterData>) => {
-      const token = data?.user_register?.token as string
-      if (token == null) return
-      sessionStorage.setItem('token', token)
-      history.replace('/')
-    },
-    [history]
-  )
+  const [register] = useRegisterMutation()
 
   const handleFormValid = useCallback<SubmitHandler<TFields>>(
     (data) => {
-      void userRegister({ variables: data }).then(handleRegisterResponse)
+      void register({ variables: data }).then(({ data }) => {
+        const token = data?.user_register?.token
+        if (token == null) return
+        sessionStorage.setItem('token', token)
+        history.replace('/')
+      })
     },
-    [handleRegisterResponse, userRegister]
+    [history, register]
   )
 
   return (
@@ -59,7 +44,7 @@ const Register: FC<IProps> = ({ history }) => {
       </Avatar>
       <form onSubmit={handleSubmit(handleFormValid)}>
         <TextField
-          {...register('username')}
+          {...formRegister('username')}
           autoComplete="username"
           autoFocus
           error={errors.username != null}
@@ -72,7 +57,7 @@ const Register: FC<IProps> = ({ history }) => {
           variant="outlined"
         />
         <TextField
-          {...register('password')}
+          {...formRegister('password')}
           autoComplete="new-password"
           error={errors.password != null}
           fullWidth
@@ -85,7 +70,7 @@ const Register: FC<IProps> = ({ history }) => {
           variant="outlined"
         />
         <TextField
-          {...register('confirmPassword', {
+          {...formRegister('confirmPassword', {
             validate: (value) =>
               value === getValues('password') || 'The passwords do not match',
           })}

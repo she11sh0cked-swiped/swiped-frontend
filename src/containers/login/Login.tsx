@@ -1,4 +1,3 @@
-import { FetchResult, gql, useMutation } from '@apollo/client'
 import {
   Avatar,
   Button,
@@ -10,16 +9,17 @@ import { FC, useCallback } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { Link, RouteComponentProps } from 'react-router-dom'
 
-import { Mutation, MutationUser_LoginArgs } from 'types/api'
+import { MutationUser_LoginArgs } from 'types/api.generated'
 
+import { useLoginMutation } from './api/user.generated'
 import useStyles from './Login.styles'
-
-type TLoginData = Pick<Mutation, 'user_login'>
 
 type IProps = RouteComponentProps
 
 const Login: FC<IProps> = ({ history }) => {
   const classes = useStyles()
+
+  const [login] = useLoginMutation()
 
   const {
     formState: { errors },
@@ -27,31 +27,16 @@ const Login: FC<IProps> = ({ history }) => {
     register,
   } = useForm<MutationUser_LoginArgs>()
 
-  const [userLogin] = useMutation<TLoginData, MutationUser_LoginArgs>(
-    gql`
-      mutation($username: String!, $password: String!) {
-        user_login(username: $username, password: $password) {
-          token
-        }
-      }
-    `
-  )
-
-  const handleLoginResponse = useCallback(
-    ({ data }: FetchResult<TLoginData>) => {
-      const token = data?.user_login?.token
-      if (token == null) return
-      sessionStorage.setItem('token', token)
-      history.replace('/')
-    },
-    [history]
-  )
-
   const handleFormValid = useCallback<SubmitHandler<MutationUser_LoginArgs>>(
     (data) => {
-      void userLogin({ variables: data }).then(handleLoginResponse)
+      void login({ variables: data }).then(({ data }) => {
+        const token = data?.user_login?.token
+        if (token == null) return
+        sessionStorage.setItem('token', token)
+        history.replace('/')
+      })
     },
-    [handleLoginResponse, userLogin]
+    [history, login]
   )
 
   return (

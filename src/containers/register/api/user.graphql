@@ -1,0 +1,5 @@
+mutation register($username: String!, $password: String!) {
+  user_register(username: $username, password: $password) {
+    token
+  }
+}

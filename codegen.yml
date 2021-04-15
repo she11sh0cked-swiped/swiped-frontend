@@ -2,11 +2,20 @@ config:
   scalars:
     MongoID: string
 
+documents: './src/**/*.graphql'
+
 generates:
-  src/types/api.ts:
+  src/types/api.generated.ts:
     plugins:
       - typescript
       - typescript-apollo-client-helpers
+  src/:
+    preset: near-operation-file
+    presetConfig:
+      baseTypesPath: types/api.generated.ts
+    plugins:
+      - typescript-operations
+      - typescript-react-apollo
 
 overwrite: true
 
