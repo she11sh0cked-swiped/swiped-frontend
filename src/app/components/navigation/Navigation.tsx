@@ -1,7 +1,10 @@
 import { AppBar, IconButton, Toolbar, Typography } from '@material-ui/core'
 import { AccountCircle, SvgIconComponent } from '@material-ui/icons'
+import { observer } from 'mobx-react'
 import { FC } from 'react'
 import { Link } from 'react-router-dom'
+
+import app from 'store/App'
 
 import useStyles from './Navigation.styles'
 
@@ -16,7 +19,9 @@ interface IProps {
   }
 }
 
-const Navigation: FC<IProps> = ({ left, right }) => {
+const Navigation: FC = () => {
+  const { left, right } = app.navigation
+
   const classes = useStyles()
 
   return (
@@ -54,4 +59,4 @@ const Navigation: FC<IProps> = ({ left, right }) => {
 }
 
 export type { IProps as INavigation }
-export default Navigation
+export default observer(Navigation)
