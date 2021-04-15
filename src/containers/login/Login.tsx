@@ -6,9 +6,9 @@ import {
   TextField,
 } from '@material-ui/core'
 import { LockOutlined } from '@material-ui/icons'
-import { FC, useCallback, useMemo } from 'react'
-import { useForm } from 'react-hook-form'
-import { Link, RouteComponentProps, useHistory } from 'react-router-dom'
+import { FC, useCallback } from 'react'
+import { SubmitHandler, useForm } from 'react-hook-form'
+import { Link, RouteComponentProps } from 'react-router-dom'
 
 import { Mutation, MutationUser_LoginArgs } from 'types/api'
 
@@ -18,12 +18,14 @@ type TLoginData = Pick<Mutation, 'user_login'>
 
 type IProps = RouteComponentProps
 
-const Login: FC<IProps> = () => {
+const Login: FC<IProps> = ({ history }) => {
   const classes = useStyles()
 
-  const history = useHistory()
-
-  const { handleSubmit, register } = useForm<MutationUser_LoginArgs>()
+  const {
+    formState: { errors },
+    handleSubmit,
+    register,
+  } = useForm<MutationUser_LoginArgs>()
 
   const [userLogin] = useMutation<TLoginData, MutationUser_LoginArgs>(
     gql`
@@ -45,12 +47,11 @@ const Login: FC<IProps> = () => {
     [history]
   )
 
-  const handleForm = useMemo(
-    () =>
-      handleSubmit((data) => {
-        void userLogin({ variables: data }).then(handleLoginResponse)
-      }),
-    [handleLoginResponse, handleSubmit, userLogin]
+  const handleFormValid = useCallback<SubmitHandler<MutationUser_LoginArgs>>(
+    (data) => {
+      void userLogin({ variables: data }).then(handleLoginResponse)
+    },
+    [handleLoginResponse, userLogin]
   )
 
   return (
@@ -58,12 +59,14 @@ const Login: FC<IProps> = () => {
       <Avatar className={classes.avatar}>
         <LockOutlined />
       </Avatar>
-      <form onSubmit={handleForm}>
+      <form onSubmit={handleSubmit(handleFormValid)}>
         <TextField
           {...register('username')}
-          autoComplete="email"
+          autoComplete="username"
           autoFocus
+          error={errors.username != null}
           fullWidth
+          helperText={errors.username?.message}
           label="Username"
           margin="normal"
           required
@@ -73,7 +76,9 @@ const Login: FC<IProps> = () => {
         <TextField
           {...register('password')}
           autoComplete="current-password"
+          error={errors.password != null}
           fullWidth
+          helperText={errors.password?.message}
           label="Password"
           margin="normal"
           required
