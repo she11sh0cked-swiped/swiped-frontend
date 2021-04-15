@@ -2,13 +2,19 @@ import { ApolloClient, from, HttpLink, InMemoryCache } from '@apollo/client'
 import { setContext } from '@apollo/client/link/context'
 import { onError } from '@apollo/client/link/error'
 
+import app from 'store/App'
+
 const errorLink = onError(({ graphQLErrors, networkError }) => {
   if (graphQLErrors)
-    graphQLErrors.map((graphQLError) =>
+    graphQLErrors.forEach((graphQLError) => {
+      app.enqueueSnackbar(graphQLError.message, { variant: 'error' })
       console.log(`[GraphQL error]`, graphQLError)
-    )
+    })
 
-  if (networkError) console.log(`[Network error]`, networkError)
+  if (networkError) {
+    app.enqueueSnackbar(networkError.message, { variant: 'error' })
+    console.log(`[Network error]`, networkError)
+  }
 })
 
 const authLink = setContext(
