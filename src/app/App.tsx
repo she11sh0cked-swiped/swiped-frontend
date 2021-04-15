@@ -7,7 +7,6 @@ import { Redirect, Route, Switch, useHistory } from 'react-router-dom'
 import Loading from 'containers/loading/Loading'
 
 import Navigation from './components/navigation/Navigation'
-import useNotifier from './hooks/useNotifier'
 
 const noRedirect: Record<string, boolean> = {
   '/login': true,
@@ -15,8 +14,6 @@ const noRedirect: Record<string, boolean> = {
 }
 
 const App: FC = () => {
-  useNotifier()
-
   const history = useHistory()
 
   useEffect(() => {

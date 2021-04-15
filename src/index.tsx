@@ -1,12 +1,12 @@
 import { ApolloProvider } from '@apollo/client'
 import { ThemeProvider } from '@material-ui/styles'
-import { SnackbarProvider } from 'notistack'
 import { StrictMode } from 'react'
 import { render } from 'react-dom'
 import { BrowserRouter as Router } from 'react-router-dom'
 
 import apolloClient from 'api/client'
 import App from 'app/App'
+import SnackbarProvider from 'app/components/snackbarProvider/SnackbarProvider'
 import theme from 'app/theme'
 
 import reportWebVitals from './reportWebVitals'
@@ -15,7 +15,7 @@ render(
   <StrictMode>
     <ApolloProvider client={apolloClient}>
       <ThemeProvider theme={theme}>
-        <SnackbarProvider maxSnack={3}>
+        <SnackbarProvider>
           <Router>
             <App />
           </Router>
