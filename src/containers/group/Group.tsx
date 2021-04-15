@@ -1,7 +1,5 @@
-import { FC, useEffect } from 'react'
+import { FC } from 'react'
 import { RouteComponentProps } from 'react-router-dom'
-
-import app from 'store/App'
 
 import List from './components/list/List'
 
@@ -12,10 +10,6 @@ const Group: FC<IProps> = ({
     params: { groupId },
   },
 }) => {
-  useEffect(() => {
-    app.navigation = { title: groupId }
-  }, [groupId])
-
   return (
     <div>
       <List groupId={groupId} />

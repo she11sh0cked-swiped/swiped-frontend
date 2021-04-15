@@ -14,10 +14,9 @@ interface IProps {
     icon: SvgIconComponent
     to: string
   }
-  title?: string
 }
 
-const Navigation: FC<IProps> = ({ left, right, title }) => {
+const Navigation: FC<IProps> = ({ left, right }) => {
   const classes = useStyles()
 
   return (
@@ -38,7 +37,7 @@ const Navigation: FC<IProps> = ({ left, right, title }) => {
           </IconButton>
         )}
         <Typography className={classes.title} variant="h6">
-          {title}
+          SWIPED
         </Typography>
         {right ? (
           <IconButton color="inherit" component={Link} edge="end" to={right.to}>
