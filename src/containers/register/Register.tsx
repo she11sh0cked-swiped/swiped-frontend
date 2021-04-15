@@ -1,8 +1,8 @@
 import { FetchResult, gql, useMutation } from '@apollo/client'
 import { Avatar, Button, TextField } from '@material-ui/core'
 import { LockOutlined } from '@material-ui/icons'
-import { FC, useCallback, useMemo } from 'react'
-import { useForm } from 'react-hook-form'
+import { FC, useCallback } from 'react'
+import { SubmitHandler, useForm } from 'react-hook-form'
 import { RouteComponentProps } from 'react-router'
 
 import { Mutation, MutationUser_RegisterArgs } from 'types/api'
@@ -11,20 +11,25 @@ import useStyles from './Register.styles'
 
 type TRegisterData = Pick<Mutation, 'user_register'>
 
+type TFields = MutationUser_RegisterArgs & { confirmPassword: string }
+
 type IProps = RouteComponentProps
 
-const Register: FC<IProps> = () => {
+const Register: FC<IProps> = ({ history }) => {
   const classes = useStyles()
 
-  const { getValues, handleSubmit, register } = useForm<
-    MutationUser_RegisterArgs & { confirmPassword: string }
-  >()
+  const {
+    formState: { errors },
+    getValues,
+    handleSubmit,
+    register,
+  } = useForm<TFields>()
 
   const [userRegister] = useMutation<TRegisterData, MutationUser_RegisterArgs>(
     gql`
-      mutation($record: CreateOneuserInput!) {
-        user_register(record: $record) {
-          recordId
+      mutation($username: String!, $password: String!) {
+        user_register(username: $username, password: $password) {
+          token
         }
       }
     `
@@ -32,20 +37,19 @@ const Register: FC<IProps> = () => {
 
   const handleRegisterResponse = useCallback(
     ({ data }: FetchResult<TRegisterData>) => {
-      //TODO login after (required api change)
-      console.log(data)
+      const token = data?.user_register?.token as string
+      if (token == null) return
+      sessionStorage.setItem('token', token)
+      history.replace('/')
     },
-    []
+    [history]
   )
 
-  const handleForm = useMemo(
-    () =>
-      handleSubmit((data) => {
-        void userRegister({ variables: { record: data.record } }).then(
-          handleRegisterResponse
-        )
-      }),
-    [handleRegisterResponse, handleSubmit, userRegister]
+  const handleFormValid = useCallback<SubmitHandler<TFields>>(
+    (data) => {
+      void userRegister({ variables: data }).then(handleRegisterResponse)
+    },
+    [handleRegisterResponse, userRegister]
   )
 
   return (
@@ -53,12 +57,14 @@ const Register: FC<IProps> = () => {
       <Avatar className={classes.avatar}>
         <LockOutlined />
       </Avatar>
-      <form onSubmit={handleForm}>
+      <form onSubmit={handleSubmit(handleFormValid)}>
         <TextField
-          {...register('record.username')}
-          autoComplete="email"
+          {...register('username')}
+          autoComplete="username"
           autoFocus
+          error={errors.username != null}
           fullWidth
+          helperText={errors.username?.message}
           label="Username"
           margin="normal"
           required
@@ -66,9 +72,11 @@ const Register: FC<IProps> = () => {
           variant="outlined"
         />
         <TextField
-          {...register('record.password')}
-          autoComplete="current-password"
+          {...register('password')}
+          autoComplete="new-password"
+          error={errors.password != null}
           fullWidth
+          helperText={errors.password?.message}
           label="Password"
           margin="normal"
           required
@@ -79,11 +87,12 @@ const Register: FC<IProps> = () => {
         <TextField
           {...register('confirmPassword', {
             validate: (value) =>
-              value === getValues('record.password') ||
-              'The passwords do not match',
+              value === getValues('password') || 'The passwords do not match',
           })}
-          autoComplete="current-password"
+          autoComplete="new-password"
+          error={errors.confirmPassword != null}
           fullWidth
+          helperText={errors.confirmPassword?.message}
           label="Confirm Password"
           margin="normal"
           required
