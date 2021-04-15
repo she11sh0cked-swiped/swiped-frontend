@@ -1,0 +1,12 @@
+query me {
+  user_findMe {
+    _id
+    groups {
+      _id
+      name
+      members {
+        _id
+      }
+    }
+  }
+}

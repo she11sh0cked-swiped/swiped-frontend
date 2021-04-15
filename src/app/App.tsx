@@ -49,6 +49,11 @@ const App: FC = () => {
               path="/register"
             />
             <Route
+              component={lazy(() => import('containers/groups/Groups'))}
+              exact
+              path="/groups"
+            />
+            <Route
               component={lazy(() => import('containers/group/Group'))}
               exact
               path="/g/:groupId"
