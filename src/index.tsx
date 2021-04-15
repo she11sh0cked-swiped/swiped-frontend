@@ -1,19 +1,26 @@
 import { ApolloProvider } from '@apollo/client'
+import { ThemeProvider } from '@material-ui/styles'
+import { SnackbarProvider } from 'notistack'
 import { StrictMode } from 'react'
 import { render } from 'react-dom'
 import { BrowserRouter as Router } from 'react-router-dom'
 
 import apolloClient from 'api/client'
 import App from 'app/App'
+import theme from 'app/theme'
 
 import reportWebVitals from './reportWebVitals'
 
 render(
   <StrictMode>
     <ApolloProvider client={apolloClient}>
-      <Router>
-        <App />
-      </Router>
+      <ThemeProvider theme={theme}>
+        <SnackbarProvider maxSnack={3}>
+          <Router>
+            <App />
+          </Router>
+        </SnackbarProvider>
+      </ThemeProvider>
     </ApolloProvider>
   </StrictMode>,
   document.getElementById('root')
