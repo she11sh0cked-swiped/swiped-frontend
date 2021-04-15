@@ -1,15 +1,15 @@
 import { autorun } from 'mobx'
 import { useSnackbar } from 'notistack'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 
 import app from 'store/App'
 
 export default function useNotifier(): void {
   const { enqueueSnackbar } = useSnackbar()
 
-  const [displayed, setDisplayed] = useState<number[]>([])
-
   useEffect(() => {
+    const displayed: number[] = []
+
     autorun(() => {
       app.notifications.forEach((notification) => {
         // Do nothing if snackbar is already displayed
@@ -17,10 +17,10 @@ export default function useNotifier(): void {
         // Display snackbar using notistack
         enqueueSnackbar(notification.message, notification.options)
         // Keep track of snackbars that we've displayed
-        setDisplayed((prevDisplayed) => [...prevDisplayed, notification.key])
+        displayed.push(notification.key)
         // Dispatch action to remove snackbar from mobx store
         app.removeSnackbar(notification.key)
       })
     })
-  }, [displayed, enqueueSnackbar])
+  }, [enqueueSnackbar])
 }
