@@ -7,12 +7,12 @@ import { Link } from 'react-router-dom'
 import Loading from 'containers/loading/Loading'
 import app from 'store/App'
 
-import { useMeQuery } from './api/user.generated'
+import { useUserQuery } from './Groups.generated'
 
 type IProps = RouteComponentProps
 
 const Groups: FC<IProps> = () => {
-  const userResult = useMeQuery()
+  const userResult = useUserQuery()
 
   const user = userResult.data?.user_findMe
 

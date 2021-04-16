@@ -11,7 +11,7 @@ import { Link, RouteComponentProps } from 'react-router-dom'
 
 import { MutationUser_LoginArgs } from 'types/api.generated'
 
-import { useLoginMutation } from './api/user.generated'
+import { useLoginMutation } from './Login.generated'
 import useStyles from './Login.styles'
 
 type IProps = RouteComponentProps

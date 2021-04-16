@@ -6,7 +6,7 @@ import { RouteComponentProps } from 'react-router'
 
 import { MutationUser_RegisterArgs } from 'types/api.generated'
 
-import { useRegisterMutation } from './api/user.generated'
+import { useRegisterMutation } from './Register.generated'
 import useStyles from './Register.styles'
 
 type TFields = MutationUser_RegisterArgs & { confirmPassword: string }
@@ -16,14 +16,14 @@ type IProps = RouteComponentProps
 const Register: FC<IProps> = ({ history }) => {
   const classes = useStyles()
 
+  const [register] = useRegisterMutation()
+
   const {
     formState: { errors },
     getValues,
     handleSubmit,
     register: formRegister,
   } = useForm<TFields>()
-
-  const [register] = useRegisterMutation()
 
   const handleFormValid = useCallback<SubmitHandler<TFields>>(
     (data) => {
