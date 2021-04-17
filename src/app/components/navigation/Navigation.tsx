@@ -1,22 +1,32 @@
 import { AppBar, IconButton, Toolbar, Typography } from '@material-ui/core'
 import { AccountCircle, SvgIconComponent } from '@material-ui/icons'
 import { observer } from 'mobx-react'
-import { FC } from 'react'
+import { FC, MouseEventHandler } from 'react'
 import { Link } from 'react-router-dom'
 
 import app from 'store/App'
 
 import useStyles from './Navigation.styles'
 
+interface INavBase {
+  icon: SvgIconComponent
+}
+
+interface INavClick extends INavBase {
+  onClick: MouseEventHandler
+  to?: never
+}
+
+interface INavLink extends INavBase {
+  onClick?: never
+  to: string
+}
+
+type INav = INavClick | INavLink
+
 interface IProps {
-  left?: {
-    icon: SvgIconComponent
-    to: string
-  }
-  right?: {
-    icon: SvgIconComponent
-    to: string
-  }
+  left?: INav
+  right?: INav
 }
 
 const Navigation: FC = () => {
@@ -32,7 +42,8 @@ const Navigation: FC = () => {
             color="inherit"
             component={Link}
             edge="start"
-            to={left.to}
+            onClick={(left as INavClick).onClick}
+            to={(left as INavLink).to}
           >
             <left.icon />
           </IconButton>
@@ -45,7 +56,13 @@ const Navigation: FC = () => {
           SWIPED
         </Typography>
         {right ? (
-          <IconButton color="inherit" component={Link} edge="end" to={right.to}>
+          <IconButton
+            color="inherit"
+            component={Link}
+            edge="end"
+            onClick={(right as INavClick).onClick}
+            to={(right as INavLink).to}
+          >
             <right.icon />
           </IconButton>
         ) : (
