@@ -1,9 +1,9 @@
-import { Avatar, Button, TextField } from '@material-ui/core'
-import { LockOutlined } from '@material-ui/icons'
-import { FC, useCallback } from 'react'
+import { Box, Button, Link as MaterialLink, TextField } from '@material-ui/core'
+import { FC, useCallback, useEffect } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
-import { RouteComponentProps } from 'react-router-dom'
+import { Link, RouteComponentProps } from 'react-router-dom'
 
+import app from 'store/App'
 import { MutationUser_RegisterArgs } from 'types/api.generated'
 
 import { useRegisterMutation } from './Register.generated'
@@ -37,65 +37,79 @@ const Register: FC<IProps> = ({ history }) => {
     [history, register]
   )
 
+  useEffect(() => {
+    app.navigation = {}
+  }, [handleFormValid, handleSubmit])
+
   return (
-    <div className={classes.root}>
-      <Avatar className={classes.avatar}>
-        <LockOutlined />
-      </Avatar>
-      <form onSubmit={handleSubmit(handleFormValid)}>
-        <TextField
-          {...formRegister('username')}
-          autoComplete="username"
-          autoFocus
-          error={errors.username != null}
-          fullWidth
-          helperText={errors.username?.message}
-          label="Username"
-          margin="normal"
-          required
-          size="small"
-          variant="outlined"
-        />
-        <TextField
-          {...formRegister('password')}
-          autoComplete="new-password"
-          error={errors.password != null}
-          fullWidth
-          helperText={errors.password?.message}
-          label="Password"
-          margin="normal"
-          required
-          size="small"
-          type="password"
-          variant="outlined"
-        />
-        <TextField
-          {...formRegister('confirmPassword', {
-            validate: (value) =>
-              value === getValues('password') || 'The passwords do not match',
-          })}
-          autoComplete="new-password"
-          error={errors.confirmPassword != null}
-          fullWidth
-          helperText={errors.confirmPassword?.message}
-          label="Confirm Password"
-          margin="normal"
-          required
-          size="small"
-          type="password"
-          variant="outlined"
-        />
-        <Button
-          className={classes.submit}
-          color="primary"
-          fullWidth
-          type="submit"
-          variant="contained"
-        >
-          Sign Up
-        </Button>
-      </form>
-    </div>
+    <Box
+      component="form"
+      display="flex"
+      flexDirection="column"
+      height="100%"
+      justifyContent="center"
+      onSubmit={handleSubmit(handleFormValid)}
+    >
+      <TextField
+        {...formRegister('username')}
+        autoComplete="username"
+        autoFocus
+        error={errors.username != null}
+        fullWidth
+        helperText={errors.username?.message}
+        label="Username"
+        margin="normal"
+        required
+        size="small"
+        variant="outlined"
+      />
+      <TextField
+        {...formRegister('password')}
+        autoComplete="new-password"
+        error={errors.password != null}
+        fullWidth
+        helperText={errors.password?.message}
+        label="Password"
+        margin="normal"
+        required
+        size="small"
+        type="password"
+        variant="outlined"
+      />
+      <TextField
+        {...formRegister('confirmPassword', {
+          validate: (value) =>
+            value === getValues('password') || 'The passwords do not match',
+        })}
+        autoComplete="new-password"
+        error={errors.confirmPassword != null}
+        fullWidth
+        helperText={errors.confirmPassword?.message}
+        label="Confirm Password"
+        margin="normal"
+        required
+        size="small"
+        type="password"
+        variant="outlined"
+      />
+      <Button
+        className={classes.submit}
+        color="primary"
+        fullWidth
+        type="submit"
+        variant="contained"
+      >
+        Sign Up
+      </Button>
+      <MaterialLink
+        className={classes.link}
+        component={Link}
+        to="/login"
+        variant="body2"
+      >
+        Already have an account? Sign In
+      </MaterialLink>
+    </Box>
   )
 }
 
