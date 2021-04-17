@@ -31,7 +31,9 @@ const Error: FC<IProps> = ({ history, location: { pathname } }) => {
   const errorMessage = getErrorMessage(errorCode)
 
   const handleGoBack = useCallback(() => {
-    history.goBack()
+    const canGoBack = history.length > 2
+    if (canGoBack) history.goBack()
+    else history.push('/')
   }, [history])
 
   useEffect(() => {
