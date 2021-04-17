@@ -1,5 +1,8 @@
-import { FC } from 'react'
+import { ArrowBack, Edit } from '@material-ui/icons'
+import { FC, useEffect } from 'react'
 import { RouteComponentProps } from 'react-router-dom'
+
+import app from 'store/App'
 
 import List from './components/list/List'
 
@@ -10,6 +13,19 @@ const Group: FC<IProps> = ({
     params: { groupId },
   },
 }) => {
+  useEffect(() => {
+    app.navigation = {
+      left: {
+        icon: ArrowBack,
+        to: '/groups',
+      },
+      right: {
+        icon: Edit,
+        to: `/g/${groupId}/edit`,
+      },
+    }
+  }, [groupId])
+
   return (
     <div>
       <List groupId={groupId} />

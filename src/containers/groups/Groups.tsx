@@ -1,5 +1,5 @@
 import { List, ListItem, ListItemText } from '@material-ui/core'
-import { ArrowBack } from '@material-ui/icons'
+import { Add, ArrowBack } from '@material-ui/icons'
 import { FC, useEffect } from 'react'
 import { RouteComponentProps } from 'react-router'
 import { Link } from 'react-router-dom'
@@ -17,7 +17,10 @@ const Groups: FC<IProps> = () => {
   const user = userResult.data?.user_findMe
 
   useEffect(() => {
-    app.navigation = { left: { icon: ArrowBack, to: '/' } }
+    app.navigation = {
+      left: { icon: ArrowBack, to: '/' },
+      right: { icon: Add, to: '/g/new' },
+    }
   }, [])
 
   if (userResult.loading) return <Loading />

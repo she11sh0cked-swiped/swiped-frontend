@@ -51,9 +51,19 @@ const App: FC = () => {
               path="/groups"
             />
             <Route
+              component={lazy(() => import('containers/groupEdit/GroupEdit'))}
+              exact
+              path="/g/new"
+            />
+            <Route
               component={lazy(() => import('containers/group/Group'))}
               exact
               path="/g/:groupId"
+            />
+            <Route
+              component={lazy(() => import('containers/groupEdit/GroupEdit'))}
+              exact
+              path="/g/:groupId/edit"
             />
             <Redirect to="/" />
           </Switch>
