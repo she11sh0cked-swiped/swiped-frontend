@@ -1,16 +1,13 @@
-import { Box, CircularProgress } from '@material-ui/core'
+import { CircularProgress } from '@material-ui/core'
 import { FC } from 'react'
+
+import Center from 'components/center/Center'
 
 const Loading: FC = () => {
   return (
-    <Box
-      alignItems="center"
-      display="flex"
-      justifyContent="center"
-      minHeight="100%"
-    >
+    <Center>
       <CircularProgress />
-    </Box>
+    </Center>
   )
 }
 

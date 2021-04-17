@@ -1,15 +1,9 @@
-import {
-  Box,
-  Button,
-  Divider,
-  Grid,
-  Hidden,
-  Typography,
-} from '@material-ui/core'
+import { Button, Divider, Grid, Hidden, Typography } from '@material-ui/core'
 import { ArrowBack } from '@material-ui/icons'
 import { FC, useCallback, useEffect } from 'react'
 import { RouteComponentProps } from 'react-router-dom'
 
+import Center from 'components/center/Center'
 import app from 'store/App'
 
 import useStyles from './Error.styles'
@@ -41,7 +35,7 @@ const Error: FC<IProps> = ({ history, location: { pathname } }) => {
   }, [])
 
   return (
-    <Box alignItems="center" display="flex" height="100%">
+    <Center>
       <Grid alignItems="center" container spacing={4}>
         <Grid item>
           <Typography variant="h1">{errorCode}</Typography>
@@ -63,7 +57,7 @@ const Error: FC<IProps> = ({ history, location: { pathname } }) => {
           </Button>
         </Grid>
       </Grid>
-    </Box>
+    </Center>
   )
 }
 

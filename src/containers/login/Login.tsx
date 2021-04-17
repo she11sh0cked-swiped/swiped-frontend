@@ -1,8 +1,9 @@
-import { Box, Button, Link as MaterialLink, TextField } from '@material-ui/core'
+import { Button, Link as MaterialLink, TextField } from '@material-ui/core'
 import { FC, useCallback, useEffect } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { Link, RouteComponentProps } from 'react-router-dom'
 
+import Center from 'components/center/Center'
 import app from 'store/App'
 import { MutationUser_LoginArgs } from 'types/api.generated'
 
@@ -39,14 +40,7 @@ const Login: FC<IProps> = ({ history }) => {
   }, [])
 
   return (
-    <Box
-      component="form"
-      display="flex"
-      flexDirection="column"
-      height="100%"
-      justifyContent="center"
-      onSubmit={handleSubmit(handleFormValid)}
-    >
+    <Center component="form" onSubmit={handleSubmit(handleFormValid)}>
       <TextField
         {...register('username')}
         autoComplete="username"
@@ -90,7 +84,7 @@ const Login: FC<IProps> = ({ history }) => {
       >
         Don&apos;t have an account? Sign Up
       </MaterialLink>
-    </Box>
+    </Center>
   )
 }
 
