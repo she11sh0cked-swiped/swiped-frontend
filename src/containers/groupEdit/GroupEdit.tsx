@@ -1,9 +1,11 @@
 import { TextField } from '@material-ui/core'
-import { ArrowBack, Save } from '@material-ui/icons'
+import { ArrowBack } from '@material-ui/icons'
 import { FC, useCallback, useEffect, useMemo } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { RouteComponentProps } from 'react-router-dom'
 
+import Center from 'components/center/Center'
+import SubmitButton from 'components/submitButton/SubmitButton'
 import Loading from 'containers/loading/Loading'
 import app from 'store/App'
 import { MutationGroup_CreateOneArgs } from 'types/api.generated'
@@ -56,17 +58,13 @@ const GroupEdit: FC<IProps> = ({
         icon: ArrowBack,
         to: isNew ? '/groups' : `/g/${groupId}`,
       },
-      right: {
-        icon: Save,
-        onClick: handleSubmit(handleFormValid),
-      },
     }
   }, [groupId, handleFormValid, handleSubmit, isNew])
 
   if (groupResult.loading) return <Loading />
 
   return (
-    <form onSubmit={handleSubmit(handleFormValid)}>
+    <Center component="form" onSubmit={handleSubmit(handleFormValid)}>
       <TextField
         {...register('record.name')}
         autoFocus
@@ -79,7 +77,8 @@ const GroupEdit: FC<IProps> = ({
         size="small"
         variant="outlined"
       />
-    </form>
+      <SubmitButton>Save</SubmitButton>
+    </Center>
   )
 }
 
