@@ -30,7 +30,7 @@ const Register: FC<IProps> = ({ history }) => {
       void register({ variables: data }).then(({ data }) => {
         const token = data?.user_register?.token
         if (token == null) return
-        sessionStorage.setItem('token', token)
+        localStorage.setItem('token', token)
         history.replace('/')
       })
     },

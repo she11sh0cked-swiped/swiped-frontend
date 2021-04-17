@@ -32,7 +32,7 @@ const Login: FC<IProps> = ({ history }) => {
       void login({ variables: data }).then(({ data }) => {
         const token = data?.user_login?.token
         if (token == null) return
-        sessionStorage.setItem('token', token)
+        localStorage.setItem('token', token)
         history.replace('/')
       })
     },

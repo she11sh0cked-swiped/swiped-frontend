@@ -17,7 +17,7 @@ const App: FC = () => {
   const history = useHistory()
 
   useEffect(() => {
-    const isTokenEmpty = sessionStorage.getItem('token') == null
+    const isTokenEmpty = localStorage.getItem('token') == null
     const isRedirect = !noRedirect[history.location.pathname]
     if (isTokenEmpty && isRedirect) history.replace('/login')
   }, [history])
