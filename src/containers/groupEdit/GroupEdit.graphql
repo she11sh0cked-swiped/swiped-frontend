@@ -3,3 +3,9 @@ query group($id: MongoID!) {
     _id
   }
 }
+
+mutation createGroup($record: CreateOnegroupInput!) {
+  group_createOne(record: $record) {
+    recordId
+  }
+}
