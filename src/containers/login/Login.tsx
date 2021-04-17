@@ -1,9 +1,10 @@
-import { Button, Link as MaterialLink, TextField } from '@material-ui/core'
+import { Link as MaterialLink, TextField } from '@material-ui/core'
 import { FC, useCallback, useEffect } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { Link, RouteComponentProps } from 'react-router-dom'
 
 import Center from 'components/center/Center'
+import SubmitButton from 'components/submitButton/SubmitButton'
 import app from 'store/App'
 import { MutationUser_LoginArgs } from 'types/api.generated'
 
@@ -67,15 +68,7 @@ const Login: FC<IProps> = ({ history }) => {
         type="password"
         variant="outlined"
       />
-      <Button
-        className={classes.submit}
-        color="primary"
-        fullWidth
-        type="submit"
-        variant="contained"
-      >
-        Sign In
-      </Button>
+      <SubmitButton>Sign In</SubmitButton>
       <MaterialLink
         className={classes.link}
         component={Link}

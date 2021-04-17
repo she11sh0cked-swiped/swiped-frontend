@@ -1,10 +1,7 @@
 import { makeStyles } from '@material-ui/core'
 
-export default makeStyles((theme) => ({
+export default makeStyles(() => ({
   link: {
     marginLeft: 'auto',
-  },
-  submit: {
-    margin: theme.spacing(3, 0, 2),
   },
 }))
