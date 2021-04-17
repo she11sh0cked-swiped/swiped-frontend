@@ -36,6 +36,11 @@ const App: FC = () => {
               path="/"
             />
             <Route
+              component={lazy(() => import('containers/error/Error'))}
+              exact
+              path="/404"
+            />
+            <Route
               component={lazy(() => import('containers/login/Login'))}
               exact
               path="/login"
@@ -65,7 +70,7 @@ const App: FC = () => {
               exact
               path="/g/:groupId/edit"
             />
-            <Redirect to="/" />
+            <Redirect to="/404" />
           </Switch>
         </Suspense>
       </Container>
