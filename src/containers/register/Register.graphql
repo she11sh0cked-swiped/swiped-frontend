@@ -1,5 +1,19 @@
-mutation register($username: String!, $password: String!) {
-  user_register(username: $username, password: $password) {
+mutation createUser(
+  $record: CreateOneuserInput!
+  $password: String!
+  $confirmPassword: String!
+) {
+  user_createOne(
+    record: $record
+    password: $password
+    confirmPassword: $confirmPassword
+  ) {
+    recordId
+  }
+}
+
+mutation login($username: String!, $password: String!) {
+  user_login(username: $username, password: $password) {
     token
   }
 }

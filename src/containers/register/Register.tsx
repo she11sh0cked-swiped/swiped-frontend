@@ -6,37 +6,47 @@ import { Link, RouteComponentProps } from 'react-router-dom'
 import Center from 'components/center/Center'
 import SubmitButton from 'components/submitButton/SubmitButton'
 import app from 'store/App'
-import { MutationUser_RegisterArgs } from 'types/api.generated'
+import { MutationUser_CreateOneArgs } from 'types/api.generated'
 
-import { useRegisterMutation } from './Register.generated'
+import { useCreateUserMutation, useLoginMutation } from './Register.generated'
 import useStyles from './Register.styles'
-
-type TFields = MutationUser_RegisterArgs & { confirmPassword: string }
 
 type IProps = RouteComponentProps
 
 const Register: FC<IProps> = ({ history }) => {
   const classes = useStyles()
 
-  const [register] = useRegisterMutation()
+  const [createUser] = useCreateUserMutation()
+  const [login] = useLoginMutation()
 
   const {
     formState: { errors },
     getValues,
     handleSubmit,
     register: formRegister,
-  } = useForm<TFields>()
+  } = useForm<MutationUser_CreateOneArgs>()
 
-  const handleFormValid = useCallback<SubmitHandler<TFields>>(
+  const handleFormValid = useCallback<
+    SubmitHandler<MutationUser_CreateOneArgs>
+  >(
     (data) => {
-      void register({ variables: data }).then(({ data }) => {
-        const token = data?.user_register?.token
-        if (token == null) return
-        localStorage.setItem('token', token)
-        history.replace('/')
+      void createUser({ variables: data }).then(({ errors }) => {
+        if (errors != null) return
+
+        void login({
+          variables: {
+            password: data.password,
+            username: data.record.username,
+          },
+        }).then(({ data }) => {
+          const token = data?.user_login?.token
+          if (token == null) return
+          localStorage.setItem('token', token)
+          history.replace('/')
+        })
       })
     },
-    [history, register]
+    [createUser, history, login]
   )
 
   useEffect(() => {
@@ -46,12 +56,12 @@ const Register: FC<IProps> = ({ history }) => {
   return (
     <Center component="form" onSubmit={handleSubmit(handleFormValid)}>
       <TextField
-        {...formRegister('username')}
+        {...formRegister('record.username')}
         autoComplete="username"
         autoFocus
-        error={errors.username != null}
+        error={errors.record?.username != null}
         fullWidth
-        helperText={errors.username?.message}
+        helperText={errors.record?.username?.message}
         label="Username"
         margin="normal"
         required

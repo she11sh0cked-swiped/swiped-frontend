@@ -31,6 +31,20 @@ export type CreateOnegroupPayload = {
   error?: Maybe<ErrorInterface>;
 };
 
+export type CreateOneuserInput = {
+  username: Scalars['String'];
+};
+
+export type CreateOneuserPayload = {
+  __typename?: 'CreateOneuserPayload';
+  /** Document ID */
+  recordId?: Maybe<Scalars['MongoID']>;
+  /** Created document */
+  record?: Maybe<User>;
+  /** Error that may occur during operation. If you request this field in GraphQL query, you will receive typed error in payload; otherwise error will be provided in root `errors` field of GraphQL response. */
+  error?: Maybe<ErrorInterface>;
+};
+
 export type ErrorInterface = {
   /** Generic error message */
   message?: Maybe<Scalars['String']>;
@@ -48,20 +62,22 @@ export type MongoError = ErrorInterface & {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  user_login?: Maybe<UserWithToken>;
-  user_register?: Maybe<UserWithToken>;
+  /** Create one document with mongoose defaults, setters, hooks and validation */
+  user_createOne?: Maybe<CreateOneuserPayload>;
+  user_login?: Maybe<Token>;
   /** Create one document with mongoose defaults, setters, hooks and validation */
   group_createOne?: Maybe<CreateOnegroupPayload>;
 };
 
 
-export type MutationUser_LoginArgs = {
+export type MutationUser_CreateOneArgs = {
+  record: CreateOneuserInput;
+  confirmPassword: Scalars['String'];
   password: Scalars['String'];
-  username: Scalars['String'];
 };
 
 
-export type MutationUser_RegisterArgs = {
+export type MutationUser_LoginArgs = {
   password: Scalars['String'];
   username: Scalars['String'];
 };
@@ -112,8 +128,15 @@ export type Group = {
   __typename?: 'group';
   membersId?: Maybe<Array<Maybe<Scalars['MongoID']>>>;
   name: Scalars['String'];
+  ownerId: Scalars['MongoID'];
   _id: Scalars['MongoID'];
+  owner?: Maybe<User>;
   members: Array<Maybe<User>>;
+};
+
+export type Token = {
+  __typename?: 'token';
+  token: Scalars['String'];
 };
 
 export type User = {
@@ -124,15 +147,14 @@ export type User = {
   groups: Array<Maybe<Group>>;
 };
 
-export type UserWithToken = {
-  __typename?: 'userWithToken';
-  username: Scalars['String'];
-  _id: Scalars['MongoID'];
-  token: Scalars['String'];
-};
-
 export type CreateOnegroupPayloadKeySpecifier = ('recordId' | 'record' | 'error' | CreateOnegroupPayloadKeySpecifier)[];
 export type CreateOnegroupPayloadFieldPolicy = {
+	recordId?: FieldPolicy<any> | FieldReadFunction<any>,
+	record?: FieldPolicy<any> | FieldReadFunction<any>,
+	error?: FieldPolicy<any> | FieldReadFunction<any>
+};
+export type CreateOneuserPayloadKeySpecifier = ('recordId' | 'record' | 'error' | CreateOneuserPayloadKeySpecifier)[];
+export type CreateOneuserPayloadFieldPolicy = {
 	recordId?: FieldPolicy<any> | FieldReadFunction<any>,
 	record?: FieldPolicy<any> | FieldReadFunction<any>,
 	error?: FieldPolicy<any> | FieldReadFunction<any>
@@ -146,10 +168,10 @@ export type MongoErrorFieldPolicy = {
 	message?: FieldPolicy<any> | FieldReadFunction<any>,
 	code?: FieldPolicy<any> | FieldReadFunction<any>
 };
-export type MutationKeySpecifier = ('user_login' | 'user_register' | 'group_createOne' | MutationKeySpecifier)[];
+export type MutationKeySpecifier = ('user_createOne' | 'user_login' | 'group_createOne' | MutationKeySpecifier)[];
 export type MutationFieldPolicy = {
+	user_createOne?: FieldPolicy<any> | FieldReadFunction<any>,
 	user_login?: FieldPolicy<any> | FieldReadFunction<any>,
-	user_register?: FieldPolicy<any> | FieldReadFunction<any>,
 	group_createOne?: FieldPolicy<any> | FieldReadFunction<any>
 };
 export type QueryKeySpecifier = ('user_findMe' | 'group_findById' | QueryKeySpecifier)[];
@@ -173,12 +195,18 @@ export type ValidatorErrorFieldPolicy = {
 	value?: FieldPolicy<any> | FieldReadFunction<any>,
 	idx?: FieldPolicy<any> | FieldReadFunction<any>
 };
-export type groupKeySpecifier = ('membersId' | 'name' | '_id' | 'members' | groupKeySpecifier)[];
+export type groupKeySpecifier = ('membersId' | 'name' | 'ownerId' | '_id' | 'owner' | 'members' | groupKeySpecifier)[];
 export type groupFieldPolicy = {
 	membersId?: FieldPolicy<any> | FieldReadFunction<any>,
 	name?: FieldPolicy<any> | FieldReadFunction<any>,
+	ownerId?: FieldPolicy<any> | FieldReadFunction<any>,
 	_id?: FieldPolicy<any> | FieldReadFunction<any>,
+	owner?: FieldPolicy<any> | FieldReadFunction<any>,
 	members?: FieldPolicy<any> | FieldReadFunction<any>
+};
+export type tokenKeySpecifier = ('token' | tokenKeySpecifier)[];
+export type tokenFieldPolicy = {
+	token?: FieldPolicy<any> | FieldReadFunction<any>
 };
 export type userKeySpecifier = ('username' | '_id' | 'groupsId' | 'groups' | userKeySpecifier)[];
 export type userFieldPolicy = {
@@ -187,16 +215,14 @@ export type userFieldPolicy = {
 	groupsId?: FieldPolicy<any> | FieldReadFunction<any>,
 	groups?: FieldPolicy<any> | FieldReadFunction<any>
 };
-export type userWithTokenKeySpecifier = ('username' | '_id' | 'token' | userWithTokenKeySpecifier)[];
-export type userWithTokenFieldPolicy = {
-	username?: FieldPolicy<any> | FieldReadFunction<any>,
-	_id?: FieldPolicy<any> | FieldReadFunction<any>,
-	token?: FieldPolicy<any> | FieldReadFunction<any>
-};
 export type TypedTypePolicies = TypePolicies & {
 	CreateOnegroupPayload?: Omit<TypePolicy, "fields" | "keyFields"> & {
 		keyFields?: false | CreateOnegroupPayloadKeySpecifier | (() => undefined | CreateOnegroupPayloadKeySpecifier),
 		fields?: CreateOnegroupPayloadFieldPolicy,
+	},
+	CreateOneuserPayload?: Omit<TypePolicy, "fields" | "keyFields"> & {
+		keyFields?: false | CreateOneuserPayloadKeySpecifier | (() => undefined | CreateOneuserPayloadKeySpecifier),
+		fields?: CreateOneuserPayloadFieldPolicy,
 	},
 	ErrorInterface?: Omit<TypePolicy, "fields" | "keyFields"> & {
 		keyFields?: false | ErrorInterfaceKeySpecifier | (() => undefined | ErrorInterfaceKeySpecifier),
@@ -230,12 +256,12 @@ export type TypedTypePolicies = TypePolicies & {
 		keyFields?: false | groupKeySpecifier | (() => undefined | groupKeySpecifier),
 		fields?: groupFieldPolicy,
 	},
+	token?: Omit<TypePolicy, "fields" | "keyFields"> & {
+		keyFields?: false | tokenKeySpecifier | (() => undefined | tokenKeySpecifier),
+		fields?: tokenFieldPolicy,
+	},
 	user?: Omit<TypePolicy, "fields" | "keyFields"> & {
 		keyFields?: false | userKeySpecifier | (() => undefined | userKeySpecifier),
 		fields?: userFieldPolicy,
-	},
-	userWithToken?: Omit<TypePolicy, "fields" | "keyFields"> & {
-		keyFields?: false | userWithTokenKeySpecifier | (() => undefined | userWithTokenKeySpecifier),
-		fields?: userWithTokenFieldPolicy,
 	}
 };

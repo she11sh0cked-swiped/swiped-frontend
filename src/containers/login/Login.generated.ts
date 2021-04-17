@@ -12,8 +12,8 @@ export type LoginMutationVariables = Types.Exact<{
 export type LoginMutation = (
   { __typename?: 'Mutation' }
   & { user_login?: Types.Maybe<(
-    { __typename?: 'userWithToken' }
-    & Pick<Types.UserWithToken, 'token'>
+    { __typename?: 'token' }
+    & Pick<Types.Token, 'token'>
   )> }
 );
 
