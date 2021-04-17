@@ -74,6 +74,12 @@ export type MutationGroup_CreateOneArgs = {
 export type Query = {
   __typename?: 'Query';
   user_findMe?: Maybe<User>;
+  group_findById?: Maybe<Group>;
+};
+
+
+export type QueryGroup_FindByIdArgs = {
+  _id: Scalars['MongoID'];
 };
 
 export type RuntimeError = ErrorInterface & {
@@ -146,9 +152,10 @@ export type MutationFieldPolicy = {
 	user_register?: FieldPolicy<any> | FieldReadFunction<any>,
 	group_createOne?: FieldPolicy<any> | FieldReadFunction<any>
 };
-export type QueryKeySpecifier = ('user_findMe' | QueryKeySpecifier)[];
+export type QueryKeySpecifier = ('user_findMe' | 'group_findById' | QueryKeySpecifier)[];
 export type QueryFieldPolicy = {
-	user_findMe?: FieldPolicy<any> | FieldReadFunction<any>
+	user_findMe?: FieldPolicy<any> | FieldReadFunction<any>,
+	group_findById?: FieldPolicy<any> | FieldReadFunction<any>
 };
 export type RuntimeErrorKeySpecifier = ('message' | RuntimeErrorKeySpecifier)[];
 export type RuntimeErrorFieldPolicy = {
