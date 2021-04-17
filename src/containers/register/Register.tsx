@@ -2,7 +2,7 @@ import { Avatar, Button, TextField } from '@material-ui/core'
 import { LockOutlined } from '@material-ui/icons'
 import { FC, useCallback } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
-import { RouteComponentProps } from 'react-router'
+import { RouteComponentProps } from 'react-router-dom'
 
 import { MutationUser_RegisterArgs } from 'types/api.generated'
 

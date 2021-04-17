@@ -1,7 +1,7 @@
 import { List, ListItem, ListItemText } from '@material-ui/core'
 import { Add, ArrowBack } from '@material-ui/icons'
 import { FC, useEffect } from 'react'
-import { RouteComponentProps } from 'react-router'
+import { RouteComponentProps } from 'react-router-dom'
 import { Link } from 'react-router-dom'
 
 import Loading from 'containers/loading/Loading'

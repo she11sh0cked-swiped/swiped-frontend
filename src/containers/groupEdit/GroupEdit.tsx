@@ -1,6 +1,6 @@
 import { ArrowBack, Save } from '@material-ui/icons'
 import { FC, useEffect, useMemo } from 'react'
-import { RouteComponentProps } from 'react-router'
+import { RouteComponentProps } from 'react-router-dom'
 
 import app from 'store/App'
 

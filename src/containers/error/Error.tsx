@@ -8,7 +8,7 @@ import {
 } from '@material-ui/core'
 import { ArrowBack } from '@material-ui/icons'
 import { FC, useCallback, useEffect } from 'react'
-import { RouteComponentProps } from 'react-router'
+import { RouteComponentProps } from 'react-router-dom'
 
 import app from 'store/App'
 
