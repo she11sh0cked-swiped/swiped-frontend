@@ -14,9 +14,8 @@ const Routes: FC = () => {
   useEffect(() => {
     const isTokenEmpty = localStorage.getItem('token') == null
     const isRedirect = !noRedirect[history.location.pathname]
-    const isSnap = navigator.userAgent === 'ReactSnap'
 
-    if (isTokenEmpty && isRedirect && !isSnap) history.replace('/login')
+    if (isTokenEmpty && isRedirect) history.replace('/login')
   }, [history])
 
   return (
