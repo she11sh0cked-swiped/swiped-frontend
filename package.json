@@ -53,6 +53,7 @@
     "react-hook-form": "^7.1.1",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
+    "react-snap": "^1.23.0",
     "react-spring": "^9.1.1",
     "react-use-gesture": "^9.1.3",
     "typescript": "^4.2.4",
@@ -62,7 +63,9 @@
   "private": true,
   "proxy": "http://localhost:4000",
   "scripts": {
-    "build": "react-scripts build",
+    "build": "npm-run-all --print-label build:code build:snap",
+    "build:code": "react-scripts build",
+    "build:snap": "react-snap",
     "codegen": "graphql-codegen",
     "eject": "react-scripts eject",
     "test": "react-scripts test",
