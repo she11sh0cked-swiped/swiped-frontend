@@ -65,8 +65,8 @@
     "build": "react-scripts build",
     "codegen": "graphql-codegen",
     "eject": "react-scripts eject",
-    "start": "npm-run-all --parallel --print-label watch:*",
     "test": "react-scripts test",
+    "watch": "npm-run-all --parallel --print-label watch:*",
     "watch:codegen": "graphql-codegen --watch src/**/*.graphql",
     "watch:start": "react-scripts start"
   },
