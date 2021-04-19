@@ -1,4 +1,4 @@
-import { Box, Button, Grid } from '@material-ui/core'
+import { Box, Button, Grid, Typography } from '@material-ui/core'
 import { ArrowBack, Edit } from '@material-ui/icons'
 import { FC, useEffect, useMemo } from 'react'
 import { RouteComponentProps } from 'react-router-dom'
@@ -67,6 +67,7 @@ const Group: FC<IProps> = ({
   return (
     <Box>
       <Grid container item justify="space-between">
+        <Typography variant="h4">{group?.name}</Typography>
         <Button
           className={sharedClasses.rightAlign}
           color="primary"
