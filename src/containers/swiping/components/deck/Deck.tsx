@@ -1,7 +1,7 @@
 import { CardActionArea, CardContent, Typography } from '@material-ui/core'
 import { Info } from '@material-ui/icons'
+import { animated, useSprings } from '@react-spring/web'
 import { FC, useCallback, useEffect, useMemo, useState } from 'react'
-import { animated, useSprings } from 'react-spring'
 import { useDrag } from 'react-use-gesture'
 
 import ImageCard from 'components/imageCard/ImageCard'
