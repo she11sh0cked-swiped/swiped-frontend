@@ -71,6 +71,8 @@ export type Mutation = {
   group_joinById?: Maybe<UpdateByIdgroupPayload>;
   /** Update one document: 1) Retrieve one document by findById. 2) Apply updates to mongoose document. 3) Mongoose applies defaults, setters, hooks and validation. 4) And save it. */
   group_leaveById?: Maybe<UpdateByIdgroupPayload>;
+  /** Update one document: 1) Retrieve one document by findById. 2) Apply updates to mongoose document. 3) Mongoose applies defaults, setters, hooks and validation. 4) And save it. */
+  group_updateById?: Maybe<UpdateByIdgroupPayload>;
 };
 
 
@@ -101,6 +103,12 @@ export type MutationGroup_LeaveByIdArgs = {
   _id: Scalars['MongoID'];
 };
 
+
+export type MutationGroup_UpdateByIdArgs = {
+  _id: Scalars['MongoID'];
+  record: UpdateByIdgroupInput;
+};
+
 export type Query = {
   __typename?: 'Query';
   user_findMe?: Maybe<User>;
@@ -116,6 +124,12 @@ export type RuntimeError = ErrorInterface & {
   __typename?: 'RuntimeError';
   /** Runtime error message */
   message?: Maybe<Scalars['String']>;
+};
+
+export type UpdateByIdgroupInput = {
+  membersId?: Maybe<Array<Maybe<Scalars['MongoID']>>>;
+  name?: Maybe<Scalars['String']>;
+  ownerId?: Maybe<Scalars['MongoID']>;
 };
 
 export type UpdateByIdgroupPayload = {
@@ -192,13 +206,14 @@ export type MongoErrorFieldPolicy = {
 	message?: FieldPolicy<any> | FieldReadFunction<any>,
 	code?: FieldPolicy<any> | FieldReadFunction<any>
 };
-export type MutationKeySpecifier = ('user_createOne' | 'user_login' | 'group_createOne' | 'group_joinById' | 'group_leaveById' | MutationKeySpecifier)[];
+export type MutationKeySpecifier = ('user_createOne' | 'user_login' | 'group_createOne' | 'group_joinById' | 'group_leaveById' | 'group_updateById' | MutationKeySpecifier)[];
 export type MutationFieldPolicy = {
 	user_createOne?: FieldPolicy<any> | FieldReadFunction<any>,
 	user_login?: FieldPolicy<any> | FieldReadFunction<any>,
 	group_createOne?: FieldPolicy<any> | FieldReadFunction<any>,
 	group_joinById?: FieldPolicy<any> | FieldReadFunction<any>,
-	group_leaveById?: FieldPolicy<any> | FieldReadFunction<any>
+	group_leaveById?: FieldPolicy<any> | FieldReadFunction<any>,
+	group_updateById?: FieldPolicy<any> | FieldReadFunction<any>
 };
 export type QueryKeySpecifier = ('user_findMe' | 'group_findById' | QueryKeySpecifier)[];
 export type QueryFieldPolicy = {
