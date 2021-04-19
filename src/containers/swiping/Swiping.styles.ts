@@ -6,6 +6,5 @@ export default makeStyles({
     gap: '1em',
     gridTemplateRows: 'auto max-content',
     height: '100%',
-    padding: '1em 0',
   },
 })
