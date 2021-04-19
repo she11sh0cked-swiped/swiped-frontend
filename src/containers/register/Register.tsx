@@ -1,15 +1,18 @@
 import { Link as MaterialLink, TextField } from '@material-ui/core'
-import { FC, useCallback, useEffect } from 'react'
-import { Controller, SubmitHandler, useForm } from 'react-hook-form'
+import { FC, useEffect, useMemo } from 'react'
+import { Controller, useForm } from 'react-hook-form'
 import { Link, RouteComponentProps } from 'react-router-dom'
 
 import Center from 'components/center/Center'
 import SubmitButton from 'components/submitButton/SubmitButton'
 import app from 'store/App'
-import { MutationUser_CreateOneArgs } from 'types/api.generated'
 import useSharedStyles from 'utils/sharedStyles'
 
-import { useCreateUserMutation, useLoginMutation } from './Register.generated'
+import {
+  CreateUserMutationVariables,
+  useCreateUserMutation,
+  useLoginMutation,
+} from './Register.generated'
 
 type IProps = RouteComponentProps
 
@@ -23,37 +26,38 @@ const Register: FC<IProps> = ({ history }) => {
     control,
     getValues,
     handleSubmit,
-  } = useForm<MutationUser_CreateOneArgs>()
+  } = useForm<CreateUserMutationVariables>()
 
-  const handleFormValid = useCallback<
-    SubmitHandler<MutationUser_CreateOneArgs>
-  >(
-    (data) => {
-      void createUser({ variables: data }).then(({ errors }) => {
-        if (errors != null) return
+  const handleFormSubmit = useMemo(
+    () =>
+      handleSubmit((data) => {
+        void createUser({ variables: data }).then(({ errors }) => {
+          if (errors != null) return
 
-        void login({
-          variables: {
-            password: data.password,
-            username: data.record.username,
-          },
-        }).then(({ data }) => {
-          const token = data?.user_login?.token
-          if (token == null) return
-          localStorage.setItem('token', token)
-          history.replace('/')
+          void login({
+            variables: {
+              password: data.password,
+              username: data.record.username,
+            },
+          }).then(({ data }) => {
+            const token = data?.user_login?.token
+            if (token == null) return
+
+            localStorage.setItem('token', token)
+
+            history.replace('/')
+          })
         })
-      })
-    },
-    [createUser, history, login]
+      }),
+    [createUser, handleSubmit, history, login]
   )
 
   useEffect(() => {
     app.navigation = {}
-  }, [handleFormValid, handleSubmit])
+  }, [])
 
   return (
-    <Center component="form" onSubmit={handleSubmit(handleFormValid)}>
+    <Center component="form" onSubmit={handleFormSubmit}>
       <Controller
         control={control}
         name="record.username"

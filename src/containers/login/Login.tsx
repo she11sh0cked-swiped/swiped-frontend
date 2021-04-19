@@ -1,15 +1,14 @@
 import { Link as MaterialLink, TextField } from '@material-ui/core'
-import { FC, useCallback, useEffect } from 'react'
-import { Controller, SubmitHandler, useForm } from 'react-hook-form'
+import { FC, useEffect, useMemo } from 'react'
+import { Controller, useForm } from 'react-hook-form'
 import { Link, RouteComponentProps } from 'react-router-dom'
 
 import Center from 'components/center/Center'
 import SubmitButton from 'components/submitButton/SubmitButton'
 import app from 'store/App'
-import { MutationUser_LoginArgs } from 'types/api.generated'
 import useSharedStyles from 'utils/sharedStyles'
 
-import { useLoginMutation } from './Login.generated'
+import { LoginMutationVariables, useLoginMutation } from './Login.generated'
 
 type IProps = RouteComponentProps
 
@@ -18,18 +17,21 @@ const Login: FC<IProps> = ({ history }) => {
 
   const [login, loginResult] = useLoginMutation()
 
-  const { control, handleSubmit } = useForm<MutationUser_LoginArgs>()
+  const { control, handleSubmit } = useForm<LoginMutationVariables>()
 
-  const handleFormValid = useCallback<SubmitHandler<MutationUser_LoginArgs>>(
-    (data) => {
-      void login({ variables: data }).then(({ data }) => {
-        const token = data?.user_login?.token
-        if (token == null) return
-        localStorage.setItem('token', token)
-        history.replace('/')
-      })
-    },
-    [history, login]
+  const handleFormSubmit = useMemo(
+    () =>
+      handleSubmit((data) => {
+        void login({ variables: data }).then(({ data }) => {
+          const token = data?.user_login?.token
+          if (token == null) return
+
+          localStorage.setItem('token', token)
+
+          history.replace('/')
+        })
+      }),
+    [handleSubmit, history, login]
   )
 
   useEffect(() => {
@@ -37,7 +39,7 @@ const Login: FC<IProps> = ({ history }) => {
   }, [])
 
   return (
-    <Center component="form" onSubmit={handleSubmit(handleFormValid)}>
+    <Center component="form" onSubmit={handleFormSubmit}>
       <Controller
         control={control}
         name="username"
