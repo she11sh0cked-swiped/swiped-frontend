@@ -1,4 +1,4 @@
-import { List, ListItem, ListItemText } from '@material-ui/core'
+import { IconButton, List, ListItem, ListItemText } from '@material-ui/core'
 import { Add, ArrowBack } from '@material-ui/icons'
 import { FC, useEffect } from 'react'
 import { RouteComponentProps } from 'react-router-dom'
@@ -18,8 +18,16 @@ const Groups: FC<IProps> = () => {
 
   useEffect(() => {
     app.navigation = {
-      left: { icon: ArrowBack, to: '/' },
-      right: { icon: Add, to: '/g/new' },
+      Left: (
+        <IconButton component={Link} to="/">
+          <ArrowBack />
+        </IconButton>
+      ),
+      Right: (
+        <IconButton component={Link} to="/g/new">
+          <Add />
+        </IconButton>
+      ),
     }
   }, [])
 

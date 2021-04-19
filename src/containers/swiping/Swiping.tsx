@@ -1,7 +1,8 @@
+import { IconButton } from '@material-ui/core'
 import { Group } from '@material-ui/icons'
 import { useEffect, useState } from 'react'
 import { FC } from 'react'
-import { RouteComponentProps } from 'react-router-dom'
+import { Link, RouteComponentProps } from 'react-router-dom'
 
 import app from 'store/App'
 
@@ -17,7 +18,13 @@ const Swiping: FC<IProps> = () => {
   const [controls, setControls] = useState<IDeckControls>()
 
   useEffect(() => {
-    app.navigation = { right: { icon: Group, to: '/groups' } }
+    app.navigation = {
+      Right: (
+        <IconButton component={Link} to="/groups">
+          <Group />
+        </IconButton>
+      ),
+    }
   }, [])
 
   return (

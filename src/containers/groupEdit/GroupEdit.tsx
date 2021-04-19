@@ -1,8 +1,8 @@
-import { TextField } from '@material-ui/core'
+import { IconButton, TextField } from '@material-ui/core'
 import { ArrowBack } from '@material-ui/icons'
 import { FC, useCallback, useEffect, useMemo } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
-import { RouteComponentProps } from 'react-router-dom'
+import { Link, RouteComponentProps } from 'react-router-dom'
 
 import Center from 'components/center/Center'
 import SubmitButton from 'components/submitButton/SubmitButton'
@@ -54,12 +54,13 @@ const GroupEdit: FC<IProps> = ({
 
   useEffect(() => {
     app.navigation = {
-      left: {
-        icon: ArrowBack,
-        to: isNew ? '/groups' : `/g/${groupId}`,
-      },
+      Left: (
+        <IconButton component={Link} to={isNew ? '/groups' : `/g/${groupId}`}>
+          <ArrowBack />
+        </IconButton>
+      ),
     }
-  }, [groupId, handleFormValid, handleSubmit, isNew])
+  }, [groupId, isNew])
 
   if (groupResult.loading) return <Loading />
 
