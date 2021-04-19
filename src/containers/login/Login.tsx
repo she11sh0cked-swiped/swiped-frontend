@@ -7,14 +7,14 @@ import Center from 'components/center/Center'
 import SubmitButton from 'components/submitButton/SubmitButton'
 import app from 'store/App'
 import { MutationUser_LoginArgs } from 'types/api.generated'
+import useSharedStyles from 'utils/sharedStyles'
 
 import { useLoginMutation } from './Login.generated'
-import useStyles from './Login.styles'
 
 type IProps = RouteComponentProps
 
 const Login: FC<IProps> = ({ history }) => {
-  const classes = useStyles()
+  const sharedClasses = useSharedStyles()
 
   const [login] = useLoginMutation()
 
@@ -70,7 +70,7 @@ const Login: FC<IProps> = ({ history }) => {
       />
       <SubmitButton>Sign In</SubmitButton>
       <MaterialLink
-        className={classes.link}
+        className={sharedClasses.rightAlign}
         component={Link}
         to="/register"
         variant="body2"
