@@ -1,5 +1,12 @@
 query group($id: MongoID!) {
   group_findById(_id: $id) {
     _id
+    ownerId
+  }
+}
+
+query user {
+  user_findMe {
+    _id
   }
 }
