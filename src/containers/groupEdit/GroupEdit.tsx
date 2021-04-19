@@ -1,16 +1,21 @@
 import { IconButton, TextField } from '@material-ui/core'
 import { ArrowBack } from '@material-ui/icons'
-import { FC, useCallback, useEffect, useMemo } from 'react'
-import { Controller, SubmitHandler, useForm } from 'react-hook-form'
+import { FC, useEffect, useMemo } from 'react'
+import { Controller, useForm } from 'react-hook-form'
 import { Link, RouteComponentProps } from 'react-router-dom'
 
 import Center from 'components/center/Center'
 import SubmitButton from 'components/submitButton/SubmitButton'
 import Loading from 'containers/loading/Loading'
 import app from 'store/App'
-import { MutationGroup_CreateOneArgs } from 'types/api.generated'
 
-import { useCreateGroupMutation, useGroupQuery } from './GroupEdit.generated'
+import {
+  CreateGroupMutationVariables,
+  UpdateGroupMutationVariables,
+  useCreateGroupMutation,
+  useGroupQuery,
+  useUpdateGroupMutation,
+} from './GroupEdit.generated'
 
 type IProps = RouteComponentProps<{ groupId: string }>
 
@@ -24,12 +29,11 @@ const GroupEdit: FC<IProps> = ({
   const isNew = useMemo(() => pathname === '/g/new', [pathname])
 
   const [createGroup, createGroupResult] = useCreateGroupMutation()
+  const [updateGroup, updateGroupResult] = useUpdateGroupMutation()
 
-  const {
-    control,
-    handleSubmit,
-    setValue,
-  } = useForm<MutationGroup_CreateOneArgs>()
+  const { control, handleSubmit, setValue } = useForm<
+    CreateGroupMutationVariables & UpdateGroupMutationVariables
+  >({ defaultValues: { id: groupId } })
 
   const groupResult = useGroupQuery({
     onCompleted: (data) => {
@@ -43,17 +47,22 @@ const GroupEdit: FC<IProps> = ({
     variables: { id: groupId },
   })
 
-  const handleFormValid = useCallback<
-    SubmitHandler<MutationGroup_CreateOneArgs>
-  >(
-    (data) => {
-      if (isNew)
-        void createGroup({ variables: data }).then(({ data }) => {
-          const groupId = data?.group_createOne?.recordId ?? ''
-          history.replace(`/g/${groupId}`)
-        })
-    },
-    [createGroup, history, isNew]
+  const handleFormSubmit = useMemo(
+    () =>
+      handleSubmit((data) => {
+        if (isNew)
+          void createGroup({ variables: { record: data.record } }).then(
+            ({ data }) => {
+              const groupId = data?.group_createOne?.recordId ?? ''
+              history.replace(`/g/${groupId}`)
+            }
+          )
+        else
+          void updateGroup({ variables: data }).then(() => {
+            history.replace(`/g/${groupId}`)
+          })
+      }),
+    [createGroup, groupId, handleSubmit, history, isNew, updateGroup]
   )
 
   useEffect(() => {
@@ -69,7 +78,7 @@ const GroupEdit: FC<IProps> = ({
   if (groupResult.loading) return <Loading />
 
   return (
-    <Center component="form" onSubmit={handleSubmit(handleFormValid)}>
+    <Center component="form" onSubmit={handleFormSubmit}>
       <Controller
         control={control}
         name="record.name"
@@ -89,7 +98,11 @@ const GroupEdit: FC<IProps> = ({
           />
         )}
       />
-      <SubmitButton loading={createGroupResult.loading}>Save</SubmitButton>
+      <SubmitButton
+        loading={createGroupResult.loading || updateGroupResult.loading}
+      >
+        Save
+      </SubmitButton>
     </Center>
   )
 }

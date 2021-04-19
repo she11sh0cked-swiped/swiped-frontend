@@ -10,3 +10,9 @@ mutation createGroup($record: CreateOnegroupInput!) {
     recordId
   }
 }
+
+mutation updateGroup($id: MongoID!, $record: UpdateByIdgroupInput!) {
+  group_updateById(_id: $id, record: $record) {
+    recordId
+  }
+}
