@@ -76,7 +76,7 @@ const GroupEdit: FC<IProps> = ({
         render={({ field: { ref, ...field }, fieldState: { error } }) => (
           <TextField
             autoFocus
-            error={error?.message != null}
+            error={error != null}
             fullWidth
             helperText={error?.message}
             label="Gruppen Name"

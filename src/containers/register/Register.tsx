@@ -1,6 +1,6 @@
 import { Link as MaterialLink, TextField } from '@material-ui/core'
 import { FC, useCallback, useEffect } from 'react'
-import { SubmitHandler, useForm } from 'react-hook-form'
+import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 import { Link, RouteComponentProps } from 'react-router-dom'
 
 import Center from 'components/center/Center'
@@ -20,10 +20,9 @@ const Register: FC<IProps> = ({ history }) => {
   const [login, loginResult] = useLoginMutation()
 
   const {
-    formState: { errors },
+    control,
     getValues,
     handleSubmit,
-    register: formRegister,
   } = useForm<MutationUser_CreateOneArgs>()
 
   const handleFormValid = useCallback<
@@ -55,47 +54,69 @@ const Register: FC<IProps> = ({ history }) => {
 
   return (
     <Center component="form" onSubmit={handleSubmit(handleFormValid)}>
-      <TextField
-        {...formRegister('record.username')}
-        autoComplete="username"
-        autoFocus
-        error={errors.record?.username != null}
-        fullWidth
-        helperText={errors.record?.username?.message}
-        label="Username"
-        margin="normal"
-        required
-        size="small"
-        variant="outlined"
+      <Controller
+        control={control}
+        name="record.username"
+        render={({ field: { ref, ...field }, fieldState: { error } }) => (
+          <TextField
+            autoComplete="username"
+            autoFocus
+            error={error != null}
+            fullWidth
+            helperText={error?.message}
+            label="Username"
+            margin="normal"
+            required
+            size="small"
+            variant="outlined"
+            {...field}
+            ref={ref}
+          />
+        )}
       />
-      <TextField
-        {...formRegister('password')}
-        autoComplete="new-password"
-        error={errors.password != null}
-        fullWidth
-        helperText={errors.password?.message}
-        label="Password"
-        margin="normal"
-        required
-        size="small"
-        type="password"
-        variant="outlined"
+      <Controller
+        control={control}
+        name="password"
+        render={({ field: { ref, ...field }, fieldState: { error } }) => (
+          <TextField
+            autoComplete="current-password"
+            error={error != null}
+            fullWidth
+            helperText={error?.message}
+            label="Password"
+            margin="normal"
+            required
+            size="small"
+            type="password"
+            variant="outlined"
+            {...field}
+            ref={ref}
+          />
+        )}
       />
-      <TextField
-        {...formRegister('confirmPassword', {
+      <Controller
+        control={control}
+        name="confirmPassword"
+        render={({ field: { ref, ...field }, fieldState: { error } }) => (
+          <TextField
+            autoComplete="new-password"
+            error={error != null}
+            fullWidth
+            helperText={error?.message}
+            label="Confirm Password"
+            margin="normal"
+            required
+            size="small"
+            type="password"
+            variant="outlined"
+            {...field}
+            ref={ref}
+          />
+        )}
+        rules={{
           validate: (value) =>
             value === getValues('password') || 'The passwords do not match',
-        })}
-        autoComplete="new-password"
-        error={errors.confirmPassword != null}
-        fullWidth
-        helperText={errors.confirmPassword?.message}
-        label="Confirm Password"
-        margin="normal"
-        required
-        size="small"
-        type="password"
-        variant="outlined"
+        }}
       />
       <SubmitButton loading={createUserResult.loading || loginResult.loading}>
         Sign Up

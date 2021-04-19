@@ -1,6 +1,6 @@
 import { Link as MaterialLink, TextField } from '@material-ui/core'
 import { FC, useCallback, useEffect } from 'react'
-import { SubmitHandler, useForm } from 'react-hook-form'
+import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 import { Link, RouteComponentProps } from 'react-router-dom'
 
 import Center from 'components/center/Center'
@@ -18,11 +18,7 @@ const Login: FC<IProps> = ({ history }) => {
 
   const [login, loginResult] = useLoginMutation()
 
-  const {
-    formState: { errors },
-    handleSubmit,
-    register,
-  } = useForm<MutationUser_LoginArgs>()
+  const { control, handleSubmit } = useForm<MutationUser_LoginArgs>()
 
   const handleFormValid = useCallback<SubmitHandler<MutationUser_LoginArgs>>(
     (data) => {
@@ -42,31 +38,45 @@ const Login: FC<IProps> = ({ history }) => {
 
   return (
     <Center component="form" onSubmit={handleSubmit(handleFormValid)}>
-      <TextField
-        {...register('username')}
-        autoComplete="username"
-        autoFocus
-        error={errors.username != null}
-        fullWidth
-        helperText={errors.username?.message}
-        label="Username"
-        margin="normal"
-        required
-        size="small"
-        variant="outlined"
+      <Controller
+        control={control}
+        name="username"
+        render={({ field: { ref, ...field }, fieldState: { error } }) => (
+          <TextField
+            autoComplete="username"
+            autoFocus
+            error={error != null}
+            fullWidth
+            helperText={error?.message}
+            label="Username"
+            margin="normal"
+            required
+            size="small"
+            variant="outlined"
+            {...field}
+            ref={ref}
+          />
+        )}
       />
-      <TextField
-        {...register('password')}
-        autoComplete="current-password"
-        error={errors.password != null}
-        fullWidth
-        helperText={errors.password?.message}
-        label="Password"
-        margin="normal"
-        required
-        size="small"
-        type="password"
-        variant="outlined"
+      <Controller
+        control={control}
+        name="password"
+        render={({ field: { ref, ...field }, fieldState: { error } }) => (
+          <TextField
+            autoComplete="current-password"
+            error={error != null}
+            fullWidth
+            helperText={error?.message}
+            label="Password"
+            margin="normal"
+            required
+            size="small"
+            type="password"
+            variant="outlined"
+            {...field}
+            ref={ref}
+          />
+        )}
       />
       <SubmitButton loading={loginResult.loading}>Sign In</SubmitButton>
       <MaterialLink
