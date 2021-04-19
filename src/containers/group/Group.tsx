@@ -1,10 +1,11 @@
-import { Box, IconButton, Typography } from '@material-ui/core'
-import { Add, ArrowBack, Edit } from '@material-ui/icons'
+import { Box, Button, Grid, IconButton, Typography } from '@material-ui/core'
+import { ArrowBack, Edit } from '@material-ui/icons'
 import { FC, useCallback, useEffect, useMemo } from 'react'
 import { Link, RouteComponentProps } from 'react-router-dom'
 
 import Loading from 'containers/loading/Loading'
 import app from 'store/App'
+import useSharedStyles from 'utils/sharedStyles'
 
 import List from './components/list/List'
 import {
@@ -21,6 +22,8 @@ const Group: FC<IProps> = ({
     params: { groupId },
   },
 }) => {
+  const sharedClasses = useSharedStyles()
+
   const groupResult = useGroupQuery({
     onError: () => {
       history.replace('/404')
@@ -38,6 +41,11 @@ const Group: FC<IProps> = ({
     userResult.loading,
   ])
 
+  const isOwner = useMemo(() => group?.ownerId === user?._id, [
+    group?.ownerId,
+    user?._id,
+  ])
+
   const isMember = useMemo(
     () => group?.membersId?.includes(user?._id ?? '') ?? false,
     [group?.membersId, user?._id]
@@ -45,42 +53,40 @@ const Group: FC<IProps> = ({
 
   const [joinGroup] = useJoinGroupMutation()
 
-  const handleJoinGroup = useCallback(() => {
-    if (user == null) return
-    void joinGroup({ variables: { id: groupId } })
-  }, [groupId, joinGroup, user])
+  const handleClick = useCallback(() => {
+    if (!isMember) void joinGroup({ variables: { id: groupId } })
+  }, [groupId, isMember, joinGroup])
 
   useEffect(() => {
-    let Right
-
-    if (isMember)
-      Right = (
-        <IconButton component={Link} to={`/g/${groupId}/edit`}>
-          <Edit />
-        </IconButton>
-      )
-    else if (!isLoading)
-      Right = (
-        <IconButton onClick={handleJoinGroup}>
-          <Add />
-        </IconButton>
-      )
-
     app.navigation = {
       Left: (
         <IconButton component={Link} to="/groups">
           <ArrowBack />
         </IconButton>
       ),
-      Right,
+      Right: isOwner ? (
+        <IconButton component={Link} to={`/g/${groupId}/edit`}>
+          <Edit />
+        </IconButton>
+      ) : undefined,
     }
-  }, [groupId, handleJoinGroup, isLoading, isMember])
+  }, [groupId, isOwner])
 
   if (isLoading) return <Loading />
 
   return (
     <Box>
-      <Typography variant="h4">{group?.name}</Typography>
+      <Grid container>
+        <Typography variant="h4">{group?.name}</Typography>
+        <Button
+          className={sharedClasses.rightAlign}
+          color="primary"
+          onClick={handleClick}
+          variant="contained"
+        >
+          {isMember ? 'Leave' : 'Join'}
+        </Button>
+      </Grid>
       <List groupId={groupId} />
     </Box>
   )
