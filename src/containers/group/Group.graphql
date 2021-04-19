@@ -12,9 +12,3 @@ query user {
     _id
   }
 }
-
-mutation joinGroup($id: MongoID!) {
-  group_joinById(_id: $id) {
-    recordId
-  }
-}

@@ -1,0 +1,11 @@
+mutation joinGroup($id: MongoID!) {
+  group_joinById(_id: $id) {
+    recordId
+  }
+}
+
+mutation leaveGroup($id: MongoID!) {
+  group_leaveById(_id: $id) {
+    recordId
+  }
+}

@@ -1,18 +1,14 @@
-import { Box, Button, Grid, IconButton, Typography } from '@material-ui/core'
+import { Box, Grid, IconButton, Typography } from '@material-ui/core'
 import { ArrowBack, Edit } from '@material-ui/icons'
-import { FC, useCallback, useEffect, useMemo } from 'react'
+import { FC, useEffect, useMemo } from 'react'
 import { Link, RouteComponentProps } from 'react-router-dom'
 
 import Loading from 'containers/loading/Loading'
 import app from 'store/App'
-import useSharedStyles from 'utils/sharedStyles'
 
+import JoinLeaveButton from './components/joinLeaveButton/JoinLeaveButton'
 import List from './components/list/List'
-import {
-  useGroupQuery,
-  useJoinGroupMutation,
-  useUserQuery,
-} from './Group.generated'
+import { useGroupQuery, useUserQuery } from './Group.generated'
 
 type IProps = RouteComponentProps<{ groupId: string }>
 
@@ -22,8 +18,6 @@ const Group: FC<IProps> = ({
     params: { groupId },
   },
 }) => {
-  const sharedClasses = useSharedStyles()
-
   const groupResult = useGroupQuery({
     onError: () => {
       history.replace('/404')
@@ -46,17 +40,6 @@ const Group: FC<IProps> = ({
     user?._id,
   ])
 
-  const isMember = useMemo(
-    () => group?.membersId?.includes(user?._id ?? '') ?? false,
-    [group?.membersId, user?._id]
-  )
-
-  const [joinGroup] = useJoinGroupMutation()
-
-  const handleClick = useCallback(() => {
-    if (!isMember) void joinGroup({ variables: { id: groupId } })
-  }, [groupId, isMember, joinGroup])
-
   useEffect(() => {
     app.navigation = {
       Left: (
@@ -78,14 +61,7 @@ const Group: FC<IProps> = ({
     <Box>
       <Grid container>
         <Typography variant="h4">{group?.name}</Typography>
-        <Button
-          className={sharedClasses.rightAlign}
-          color="primary"
-          onClick={handleClick}
-          variant="contained"
-        >
-          {isMember ? 'Leave' : 'Join'}
-        </Button>
+        <JoinLeaveButton group={group} user={user} />
       </Grid>
       <List groupId={groupId} />
     </Box>
