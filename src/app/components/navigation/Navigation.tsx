@@ -19,7 +19,7 @@ const Navigation: FC = () => {
 
   return (
     <AppBar>
-      <Toolbar>
+      <Toolbar className={classes.toolbar}>
         {cloneElement(Left ?? <Box />, { ...commonProps, edge: 'start' })}
         <Typography className={classes.title} variant="h6">
           SWIPED
