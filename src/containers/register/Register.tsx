@@ -16,8 +16,8 @@ type IProps = RouteComponentProps
 const Register: FC<IProps> = ({ history }) => {
   const sharedClasses = useSharedStyles()
 
-  const [createUser] = useCreateUserMutation()
-  const [login] = useLoginMutation()
+  const [createUser, createUserResult] = useCreateUserMutation()
+  const [login, loginResult] = useLoginMutation()
 
   const {
     formState: { errors },
@@ -97,7 +97,9 @@ const Register: FC<IProps> = ({ history }) => {
         type="password"
         variant="outlined"
       />
-      <SubmitButton>Sign Up</SubmitButton>
+      <SubmitButton loading={createUserResult.loading || loginResult.loading}>
+        Sign Up
+      </SubmitButton>
       <MaterialLink
         className={sharedClasses.rightAlign}
         component={Link}

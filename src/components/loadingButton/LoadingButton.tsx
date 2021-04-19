@@ -27,6 +27,7 @@ const LoadingButton: FC<IProps> = ({ children, loading, ...props }) => (
   </Button>
 )
 
+export type { IProps as ILoadingButtonProps }
 export default withStyles(() => ({
   root: {
     position: 'relative',

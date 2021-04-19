@@ -31,7 +31,7 @@ const GroupEdit: FC<IProps> = ({
     variables: { id: groupId },
   })
 
-  const [createGroup] = useCreateGroupMutation()
+  const [createGroup, createGroupResult] = useCreateGroupMutation()
 
   const {
     formState: { errors },
@@ -78,7 +78,7 @@ const GroupEdit: FC<IProps> = ({
         size="small"
         variant="outlined"
       />
-      <SubmitButton>Save</SubmitButton>
+      <SubmitButton loading={createGroupResult.loading}>Save</SubmitButton>
     </Center>
   )
 }

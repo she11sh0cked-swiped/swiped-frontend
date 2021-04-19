@@ -1,10 +1,14 @@
-import { Button, ButtonProps, withStyles } from '@material-ui/core'
+import { withStyles } from '@material-ui/core'
 import { FC } from 'react'
 
-type IProps = ButtonProps
+import LoadingButton, {
+  ILoadingButtonProps,
+} from 'components/loadingButton/LoadingButton'
+
+type IProps = ILoadingButtonProps
 
 const SubmitButton: FC<IProps> = (props) => (
-  <Button
+  <LoadingButton
     color="primary"
     fullWidth
     type="submit"
