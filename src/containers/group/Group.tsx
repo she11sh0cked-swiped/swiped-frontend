@@ -1,9 +1,11 @@
+import { Box, Button, Grid } from '@material-ui/core'
 import { ArrowBack, Edit } from '@material-ui/icons'
 import { FC, useEffect, useMemo } from 'react'
 import { RouteComponentProps } from 'react-router-dom'
 
 import Loading from 'containers/loading/Loading'
 import app from 'store/App'
+import useSharedStyles from 'utils/sharedStyles'
 
 import List from './components/list/List'
 import { useGroupQuery, useUserQuery } from './Group.generated'
@@ -16,6 +18,8 @@ const Group: FC<IProps> = ({
     params: { groupId },
   },
 }) => {
+  const sharedClasses = useSharedStyles()
+
   const groupResult = useGroupQuery({
     onError: () => {
       history.replace('/404')
@@ -38,6 +42,11 @@ const Group: FC<IProps> = ({
     [group?.ownerId, isLoading, user?._id]
   )
 
+  const isMember = useMemo(
+    () => group?.membersId?.includes(user?._id ?? '') ?? false,
+    [group?.membersId, user?._id]
+  )
+
   useEffect(() => {
     app.navigation = {
       left: {
@@ -56,9 +65,18 @@ const Group: FC<IProps> = ({
   if (isLoading) return <Loading />
 
   return (
-    <div>
+    <Box>
+      <Grid container item justify="space-between">
+        <Button
+          className={sharedClasses.rightAlign}
+          color="primary"
+          variant="contained"
+        >
+          {isMember ? 'Leave' : 'Join'}
+        </Button>
+      </Grid>
       <List groupId={groupId} />
-    </div>
+    </Box>
   )
 }
 

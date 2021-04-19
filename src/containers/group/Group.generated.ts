@@ -12,7 +12,7 @@ export type GroupQuery = (
   { __typename?: 'Query' }
   & { group_findById?: Types.Maybe<(
     { __typename?: 'group' }
-    & Pick<Types.Group, '_id' | 'ownerId'>
+    & Pick<Types.Group, '_id' | 'ownerId' | 'membersId'>
   )> }
 );
 
@@ -33,6 +33,7 @@ export const GroupDocument = gql`
   group_findById(_id: $id) {
     _id
     ownerId
+    membersId
   }
 }
     `;

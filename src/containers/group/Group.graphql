@@ -2,6 +2,7 @@ query group($id: MongoID!) {
   group_findById(_id: $id) {
     _id
     ownerId
+    membersId
   }
 }
 
