@@ -67,6 +67,8 @@ export type Mutation = {
   user_login?: Maybe<Token>;
   /** Create one document with mongoose defaults, setters, hooks and validation */
   group_createOne?: Maybe<CreateOnegroupPayload>;
+  /** Update one document: 1) Retrieve one document by findById. 2) Apply updates to mongoose document. 3) Mongoose applies defaults, setters, hooks and validation. 4) And save it. */
+  group_joinById?: Maybe<UpdateByIdgroupPayload>;
 };
 
 
@@ -87,6 +89,11 @@ export type MutationGroup_CreateOneArgs = {
   record: CreateOnegroupInput;
 };
 
+
+export type MutationGroup_JoinByIdArgs = {
+  _id: Scalars['MongoID'];
+};
+
 export type Query = {
   __typename?: 'Query';
   user_findMe?: Maybe<User>;
@@ -102,6 +109,16 @@ export type RuntimeError = ErrorInterface & {
   __typename?: 'RuntimeError';
   /** Runtime error message */
   message?: Maybe<Scalars['String']>;
+};
+
+export type UpdateByIdgroupPayload = {
+  __typename?: 'UpdateByIdgroupPayload';
+  /** Document ID */
+  recordId?: Maybe<Scalars['MongoID']>;
+  /** Updated document */
+  record?: Maybe<Group>;
+  /** Error that may occur during operation. If you request this field in GraphQL query, you will receive typed error in payload; otherwise error will be provided in root `errors` field of GraphQL response. */
+  error?: Maybe<ErrorInterface>;
 };
 
 export type ValidationError = ErrorInterface & {
@@ -168,11 +185,12 @@ export type MongoErrorFieldPolicy = {
 	message?: FieldPolicy<any> | FieldReadFunction<any>,
 	code?: FieldPolicy<any> | FieldReadFunction<any>
 };
-export type MutationKeySpecifier = ('user_createOne' | 'user_login' | 'group_createOne' | MutationKeySpecifier)[];
+export type MutationKeySpecifier = ('user_createOne' | 'user_login' | 'group_createOne' | 'group_joinById' | MutationKeySpecifier)[];
 export type MutationFieldPolicy = {
 	user_createOne?: FieldPolicy<any> | FieldReadFunction<any>,
 	user_login?: FieldPolicy<any> | FieldReadFunction<any>,
-	group_createOne?: FieldPolicy<any> | FieldReadFunction<any>
+	group_createOne?: FieldPolicy<any> | FieldReadFunction<any>,
+	group_joinById?: FieldPolicy<any> | FieldReadFunction<any>
 };
 export type QueryKeySpecifier = ('user_findMe' | 'group_findById' | QueryKeySpecifier)[];
 export type QueryFieldPolicy = {
@@ -182,6 +200,12 @@ export type QueryFieldPolicy = {
 export type RuntimeErrorKeySpecifier = ('message' | RuntimeErrorKeySpecifier)[];
 export type RuntimeErrorFieldPolicy = {
 	message?: FieldPolicy<any> | FieldReadFunction<any>
+};
+export type UpdateByIdgroupPayloadKeySpecifier = ('recordId' | 'record' | 'error' | UpdateByIdgroupPayloadKeySpecifier)[];
+export type UpdateByIdgroupPayloadFieldPolicy = {
+	recordId?: FieldPolicy<any> | FieldReadFunction<any>,
+	record?: FieldPolicy<any> | FieldReadFunction<any>,
+	error?: FieldPolicy<any> | FieldReadFunction<any>
 };
 export type ValidationErrorKeySpecifier = ('message' | 'errors' | ValidationErrorKeySpecifier)[];
 export type ValidationErrorFieldPolicy = {
@@ -243,6 +267,10 @@ export type TypedTypePolicies = TypePolicies & {
 	RuntimeError?: Omit<TypePolicy, "fields" | "keyFields"> & {
 		keyFields?: false | RuntimeErrorKeySpecifier | (() => undefined | RuntimeErrorKeySpecifier),
 		fields?: RuntimeErrorFieldPolicy,
+	},
+	UpdateByIdgroupPayload?: Omit<TypePolicy, "fields" | "keyFields"> & {
+		keyFields?: false | UpdateByIdgroupPayloadKeySpecifier | (() => undefined | UpdateByIdgroupPayloadKeySpecifier),
+		fields?: UpdateByIdgroupPayloadFieldPolicy,
 	},
 	ValidationError?: Omit<TypePolicy, "fields" | "keyFields"> & {
 		keyFields?: false | ValidationErrorKeySpecifier | (() => undefined | ValidationErrorKeySpecifier),
