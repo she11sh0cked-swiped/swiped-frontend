@@ -52,7 +52,7 @@ const List: FC<IProps> = () => {
         const rating = (match.likes / 10) * 5
 
         return (
-          <ListItem key={match.data.id}>
+          <ListItem disableGutters key={match.data.id}>
             <ImageCard className={classes.card} image={match.data.image}>
               <CardActionArea>
                 <CardContent>
