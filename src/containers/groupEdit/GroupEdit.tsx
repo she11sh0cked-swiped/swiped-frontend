@@ -1,7 +1,7 @@
 import { IconButton, TextField } from '@material-ui/core'
 import { ArrowBack } from '@material-ui/icons'
 import { FC, useCallback, useEffect, useMemo } from 'react'
-import { SubmitHandler, useForm } from 'react-hook-form'
+import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 import { Link, RouteComponentProps } from 'react-router-dom'
 
 import Center from 'components/center/Center'
@@ -23,21 +23,25 @@ const GroupEdit: FC<IProps> = ({
 }) => {
   const isNew = useMemo(() => pathname === '/g/new', [pathname])
 
+  const [createGroup, createGroupResult] = useCreateGroupMutation()
+
+  const {
+    control,
+    handleSubmit,
+    setValue,
+  } = useForm<MutationGroup_CreateOneArgs>()
+
   const groupResult = useGroupQuery({
+    onCompleted: (data) => {
+      const group = data?.group_findById
+      setValue('record.name', group?.name ?? '')
+    },
     onError: () => {
       history.replace('/404')
     },
     skip: isNew,
     variables: { id: groupId },
   })
-
-  const [createGroup, createGroupResult] = useCreateGroupMutation()
-
-  const {
-    formState: { errors },
-    handleSubmit,
-    register,
-  } = useForm<MutationGroup_CreateOneArgs>()
 
   const handleFormValid = useCallback<
     SubmitHandler<MutationGroup_CreateOneArgs>
@@ -66,17 +70,24 @@ const GroupEdit: FC<IProps> = ({
 
   return (
     <Center component="form" onSubmit={handleSubmit(handleFormValid)}>
-      <TextField
-        {...register('record.name')}
-        autoFocus
-        error={errors.record?.name != null}
-        fullWidth
-        helperText={errors.record?.name?.message}
-        label="Gruppen Name"
-        margin="normal"
-        required
-        size="small"
-        variant="outlined"
+      <Controller
+        control={control}
+        name="record.name"
+        render={({ field: { ref, ...field }, fieldState: { error } }) => (
+          <TextField
+            autoFocus
+            error={error?.message != null}
+            fullWidth
+            helperText={error?.message}
+            label="Gruppen Name"
+            margin="normal"
+            required
+            size="small"
+            variant="outlined"
+            {...field}
+            ref={ref}
+          />
+        )}
       />
       <SubmitButton loading={createGroupResult.loading}>Save</SubmitButton>
     </Center>
