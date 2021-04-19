@@ -2,10 +2,9 @@ config:
   scalars:
     MongoID: string
 
-documents: ./src/**/*.graphql
-
 generates:
   src/:
+    documents: ./src/**/*.graphql
     plugins:
       - typescript-operations
       - typescript-react-apollo
