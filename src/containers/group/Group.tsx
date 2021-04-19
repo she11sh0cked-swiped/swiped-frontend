@@ -1,13 +1,17 @@
-import { Box, Typography } from '@material-ui/core'
+import { Box, IconButton, Typography } from '@material-ui/core'
 import { Add, ArrowBack, Edit } from '@material-ui/icons'
-import { FC, useEffect, useMemo } from 'react'
-import { RouteComponentProps } from 'react-router-dom'
+import { FC, useCallback, useEffect, useMemo } from 'react'
+import { Link, RouteComponentProps } from 'react-router-dom'
 
 import Loading from 'containers/loading/Loading'
 import app from 'store/App'
 
 import List from './components/list/List'
-import { useGroupQuery, useUserQuery } from './Group.generated'
+import {
+  useGroupQuery,
+  useJoinGroupMutation,
+  useUserQuery,
+} from './Group.generated'
 
 type IProps = RouteComponentProps<{ groupId: string }>
 
@@ -39,25 +43,38 @@ const Group: FC<IProps> = ({
     [group?.membersId, user?._id]
   )
 
+  const [joinGroup] = useJoinGroupMutation()
+
+  const handleJoinGroup = useCallback(() => {
+    if (user == null) return
+    void joinGroup({ variables: { id: groupId } })
+  }, [groupId, joinGroup, user])
+
   useEffect(() => {
+    let Right
+
+    if (isMember)
+      Right = (
+        <IconButton component={Link} to={`/g/${groupId}/edit`}>
+          <Edit />
+        </IconButton>
+      )
+    else if (!isLoading)
+      Right = (
+        <IconButton onClick={handleJoinGroup}>
+          <Add />
+        </IconButton>
+      )
+
     app.navigation = {
-      left: {
-        icon: ArrowBack,
-        to: '/groups',
-      },
-      right: isMember
-        ? {
-            icon: Edit,
-            to: `/g/${groupId}/edit`,
-          }
-        : {
-            icon: Add,
-            onClick: () => {
-              console.log('join!')
-            },
-          },
+      Left: (
+        <IconButton component={Link} to="/groups">
+          <ArrowBack />
+        </IconButton>
+      ),
+      Right,
     }
-  }, [groupId, isMember])
+  }, [groupId, handleJoinGroup, isLoading, isMember])
 
   if (isLoading) return <Loading />
 
