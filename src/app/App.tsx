@@ -2,6 +2,7 @@ import '@fontsource/roboto'
 
 import { ApolloProvider } from '@apollo/client'
 import {
+  Box,
   Container,
   CssBaseline,
   ThemeProvider,
@@ -26,8 +27,10 @@ const App: FC = () => {
             <CssBaseline />
             <Navigation />
             <Toolbar />
-            <Container maxWidth="sm">
-              <Routes />
+            <Container disableGutters maxWidth="sm">
+              <Box height="100%" p={2}>
+                <Routes />
+              </Box>
             </Container>
           </Router>
         </SnackbarProvider>
