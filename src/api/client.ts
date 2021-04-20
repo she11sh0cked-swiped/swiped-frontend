@@ -6,11 +6,12 @@ import {
   ServerError,
   ServerParseError,
 } from '@apollo/client'
-import { setContext } from '@apollo/client/link/context'
+import { ApolloLink } from '@apollo/client'
 import { onError } from '@apollo/client/link/error'
 import { GraphQLError } from 'graphql'
 
 import app from 'store/App'
+import { getOperationName } from 'utils/graphql'
 
 function handleGraphqlError(error: GraphQLError) {
   if (!error.message.startsWith('Context creation failed'))
@@ -26,6 +27,7 @@ function handleNetworkError(error: TApolloNetworkError) {
 
   switch (code) {
     case 400:
+      localStorage.removeItem('token')
       app.router.replace('/login')
       break
 
@@ -42,17 +44,26 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
   if (networkError) handleNetworkError(networkError as TApolloNetworkError)
 })
 
-const authLink = setContext(
-  (_, { headers }: { headers: Record<string, string> }) => {
-    const token = localStorage.getItem('token')
-    return {
-      headers: {
-        ...headers,
-        authorization: token ? `Bearer ${token}` : undefined,
-      },
-    }
-  }
-)
+const whiteList = ['user_login', 'user_register']
+
+const authLink = new ApolloLink((operation, forward) => {
+  const token = localStorage.getItem('token')
+  const operationName = getOperationName(operation.query)
+
+  if (token == null && !whiteList.some((opName) => operationName === opName)) {
+    const controller = new AbortController()
+    operation.setContext({
+      fetchOptions: { signal: controller.signal },
+    })
+    controller.abort()
+    app.router.replace('/login')
+  } else
+    operation.setContext({
+      headers: { authorization: token ? `Bearer ${token}` : undefined },
+    })
+
+  return forward(operation)
+})
 
 const apolloClient = new ApolloClient({
   cache: new InMemoryCache(),
