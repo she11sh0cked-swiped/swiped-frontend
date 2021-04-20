@@ -12,5 +12,6 @@ export default makeStyles({
     touchAction: 'none',
     width: '100%',
     willChange: 'transform',
+    zIndex: 1,
   },
 })
