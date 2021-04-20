@@ -1,6 +1,14 @@
 import { Box } from '@material-ui/core'
 import { animated, to as interpolate, useSprings } from '@react-spring/web'
-import { FC, useCallback, useEffect, useState } from 'react'
+import {
+  forwardRef,
+  ForwardRefRenderFunction,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useState,
+} from 'react'
 import { useDrag } from 'react-use-gesture'
 import { FullGestureState } from 'react-use-gesture/dist/types'
 
@@ -40,19 +48,19 @@ interface IGoneState {
   visible: boolean
 }
 
-interface IDeckControls {
-  dislike: () => void
-  like: () => void
+interface IRef {
+  swipe: (dir: 'left' | 'right') => void
 }
 
-interface IProps {
-  registerControls(controls: IDeckControls): void
-}
-
-const Deck: FC<IProps> = ({ registerControls }) => {
+const Deck: ForwardRefRenderFunction<IRef> = (_, ref) => {
   const classes = useStyles()
 
   const [gone, setGone] = useState<Record<number, IGoneState>>({}) // The set flags all the cards that are flicked out
+
+  const nextIndex = useMemo(
+    () => Math.min(...Object.keys(gone).map(Number), cards.length) - 1,
+    [gone]
+  )
 
   // Create a bunch of springs using the helpers above
   const [props, api] = useSprings(cards.length, (i) => ({
@@ -69,7 +77,10 @@ const Deck: FC<IProps> = ({ registerControls }) => {
       direction: [xDir],
       velocity,
     }: TDragState) => {
-      const [index] = args as [number]
+      const [i] = args as [number]
+
+      if (gone[i] != null) return // We don't need to move a card that's already gone
+      if (cards[i] == null) return // We also don't need to move a card if it doesn't exist
 
       const trigger = velocity > 0.2 // If you flick hard enough it should trigger the card to fly out
       const dir = xDir < 0 ? -1 : 1 // Direction should either point left or right
@@ -79,7 +90,7 @@ const Deck: FC<IProps> = ({ registerControls }) => {
       if (isGone)
         setGone((prevGone) => ({
           ...prevGone,
-          [index]: { dir, visible: true },
+          [i]: { dir, visible: true },
         })) // If button/finger's up and trigger velocity is reached, we flag the card ready to fly out
 
       const x = isGone ? (200 + window.innerWidth) * dir : down ? mx : 0 // When a card is gone it flys out left or right, otherwise goes back to zero
@@ -87,7 +98,7 @@ const Deck: FC<IProps> = ({ registerControls }) => {
       const scale = down ? 1.1 : 1 // Active cards lift up a bit
 
       // We're only interested in changing spring-data for the current spring
-      void api.current[index]
+      void api.current[i]
         .start({
           config: {
             friction: 50,
@@ -103,11 +114,11 @@ const Deck: FC<IProps> = ({ registerControls }) => {
 
           setGone((prevGone) => ({
             ...prevGone,
-            [index]: { dir, visible: false },
+            [i]: { dir, visible: false },
           }))
         })
     },
-    [api]
+    [api, gone]
   )
 
   const bind = useDrag(handleDrag)
@@ -116,32 +127,33 @@ const Deck: FC<IProps> = ({ registerControls }) => {
     const goneCardsN = Object.values(gone).filter((card) => !card.visible)
       .length
 
-    if (goneCardsN === cards.length)
-      setTimeout(() => {
-        setGone({})
-        api.start((i) => to(i))
-      }, 600)
+    if (goneCardsN === cards.length) {
+      setGone({})
+      api.start((i) => to(i))
+    }
   }, [api, gone])
 
-  useEffect(() => {
-    const commonDragState = {
-      args: [0],
-      down: false,
-      movement: [1000, 0],
-      velocity: 1,
-    } as TDragState
+  const handleSwipe = useCallback<IRef['swipe']>(
+    (dir) => {
+      handleDrag({
+        args: [nextIndex],
+        direction: [dir === 'left' ? -1 : 1, 0],
+        down: false,
+        movement: [1000, 0],
+        velocity: 1,
+      })
+    },
+    [handleDrag, nextIndex]
+  )
 
-    registerControls({
-      dislike: () => handleDrag({ ...commonDragState, direction: [-1, 0] }),
-      like: () => handleDrag({ ...commonDragState, direction: [1, 0] }),
-    })
-  }, [handleDrag, registerControls])
+  useImperativeHandle(ref, () => ({ swipe: handleSwipe }))
 
   // Now we're just mapping the animated values to our view, that's it. Btw, this component only renders once. :-)
   return (
     <Box position="relative">
       {props.map(({ rot, scale, x, y }, i) => {
-        if (!(gone[i]?.visible ?? true)) return
+        const isVisible = gone[i]?.visible ?? true
+        if (!isVisible) return
 
         return (
           <animated.div className={classes.card} key={i} style={{ x, y }}>
@@ -161,5 +173,5 @@ const Deck: FC<IProps> = ({ registerControls }) => {
   )
 }
 
-export type { IDeckControls }
-export default Deck
+export type { IRef as IDeckRef }
+export default forwardRef(Deck)
