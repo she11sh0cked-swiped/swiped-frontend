@@ -17,8 +17,6 @@ const Swiping: FC<IProps> = () => {
 
   const deckRef = useRef<IDeckRef>(null)
 
-  console.log(deckRef)
-
   useEffect(() => {
     app.navigation = {
       Right: (
