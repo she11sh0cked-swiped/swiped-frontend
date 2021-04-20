@@ -6,7 +6,7 @@ WORKDIR /app
 # copy project file
 COPY package.json .
 # install ALL node_modules, including 'devDependencies'
-RUN yarn install --frozen-lockfile
+RUN yarn install --frozen-lockfile --network-timeout 300000
 # copy static files
 COPY public ./public
 # copy app sources
