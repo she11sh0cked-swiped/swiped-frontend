@@ -7,7 +7,7 @@ import { Link, RouteComponentProps } from 'react-router-dom'
 import app from 'store/App'
 
 import Buttons from './components/buttons/Buttons'
-import Deck, { IDeckRef } from './components/deck/NewDeck'
+import Deck, { IDeckRef } from './components/deck/Deck'
 import useStyles from './Swiping.styles'
 
 type IProps = RouteComponentProps
