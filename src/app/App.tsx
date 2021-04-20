@@ -9,13 +9,14 @@ import {
   Toolbar,
 } from '@material-ui/core'
 import { FC } from 'react'
-import { BrowserRouter as Router } from 'react-router-dom'
+import { Router } from 'react-router'
 
 import apolloClient from 'api/client'
 
 import Navigation from './components/navigation/Navigation'
 import Routes from './components/routes/Routes'
 import SnackbarProvider from './components/snackbarProvider/SnackbarProvider'
+import history from './history'
 import theme from './theme'
 
 const App: FC = () => {
@@ -23,7 +24,7 @@ const App: FC = () => {
     <ApolloProvider client={apolloClient}>
       <ThemeProvider theme={theme}>
         <SnackbarProvider>
-          <Router>
+          <Router history={history}>
             <CssBaseline />
             <Navigation />
             <Toolbar />

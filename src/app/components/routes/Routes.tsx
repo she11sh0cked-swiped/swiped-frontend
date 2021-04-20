@@ -1,23 +1,9 @@
-import { FC, lazy, Suspense, useEffect } from 'react'
-import { Redirect, Route, Switch, useHistory } from 'react-router-dom'
+import { FC, lazy, Suspense } from 'react'
+import { Redirect, Route, Switch } from 'react-router-dom'
 
 import Loading from 'containers/loading/Loading'
 
-const noRedirect: Record<string, boolean> = {
-  '/login': true,
-  '/register': true,
-}
-
 const Routes: FC = () => {
-  const history = useHistory()
-
-  useEffect(() => {
-    const isTokenEmpty = localStorage.getItem('token') == null
-    const isRedirect = !noRedirect[history.location.pathname]
-
-    if (isTokenEmpty && isRedirect) history.replace('/login')
-  }, [history])
-
   return (
     <Suspense fallback={<Loading />}>
       <Switch>

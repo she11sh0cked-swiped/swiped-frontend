@@ -1,4 +1,5 @@
 import { makeAutoObservable } from 'mobx'
+import { RouterStore } from 'mobx-react-router'
 import { OptionsObject, SnackbarMessage } from 'notistack'
 
 import { INavigation } from 'app/components/navigation/Navigation'
@@ -12,6 +13,7 @@ interface INotification {
 class App {
   navigation: INavigation = {}
   notifications: INotification[] = []
+  router = new RouterStore()
 
   enqueueSnackbar(
     message: INotification['message'],
