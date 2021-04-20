@@ -1,20 +1,45 @@
-import { ApolloClient, from, HttpLink, InMemoryCache } from '@apollo/client'
+import {
+  ApolloClient,
+  from,
+  HttpLink,
+  InMemoryCache,
+  ServerError,
+  ServerParseError,
+} from '@apollo/client'
 import { setContext } from '@apollo/client/link/context'
 import { onError } from '@apollo/client/link/error'
+import { GraphQLError } from 'graphql'
 
 import app from 'store/App'
 
-const errorLink = onError(({ graphQLErrors, networkError }) => {
-  if (graphQLErrors)
-    graphQLErrors.forEach((graphQLError) => {
-      app.enqueueSnackbar(graphQLError.message, { variant: 'error' })
-      console.log(`[GraphQL error]`, graphQLError)
-    })
+function handleGraphqlError(error: GraphQLError) {
+  if (!error.message.startsWith('Context creation failed'))
+    app.enqueueSnackbar(error.message, { variant: 'error' })
 
-  if (networkError) {
-    app.enqueueSnackbar(networkError.message, { variant: 'error' })
-    console.log(`[Network error]`, networkError)
+  console.log(`[GraphQL error]`, error)
+}
+
+type TApolloNetworkError = ServerError | ServerParseError
+
+function handleNetworkError(error: TApolloNetworkError) {
+  const code = error.statusCode
+
+  switch (code) {
+    case 400:
+      app.router.replace('/login')
+      break
+
+    default:
+      app.enqueueSnackbar(error.message, { variant: 'error' })
+      break
   }
+
+  console.log(`[Network error]`, { ...error })
+}
+
+const errorLink = onError(({ graphQLErrors, networkError }) => {
+  if (graphQLErrors) graphQLErrors.forEach(handleGraphqlError)
+  if (networkError) handleNetworkError(networkError as TApolloNetworkError)
 })
 
 const authLink = setContext(
