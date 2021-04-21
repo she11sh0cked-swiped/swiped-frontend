@@ -5,6 +5,7 @@ import { Link, RouteComponentProps } from 'react-router-dom'
 
 import Center from 'components/center/Center'
 import SubmitButton from 'components/submitButton/SubmitButton'
+import Tmdb from 'components/tmdb/Tmdb'
 import app from 'store/App'
 import useSharedStyles from 'utils/sharedStyles'
 
@@ -57,83 +58,86 @@ const Register: FC<IProps> = ({ history }) => {
   }, [])
 
   return (
-    <Center component="form" onSubmit={handleFormSubmit}>
-      <Controller
-        control={control}
-        name="record.username"
-        render={({ field: { ref, ...field }, fieldState: { error } }) => (
-          <TextField
-            autoComplete="username"
-            autoFocus
-            error={error != null}
-            fullWidth
-            helperText={error?.message}
-            label="Username"
-            margin="normal"
-            required
-            size="small"
-            variant="outlined"
-            {...field}
-            ref={ref}
-          />
-        )}
-      />
-      <Controller
-        control={control}
-        name="password"
-        render={({ field: { ref, ...field }, fieldState: { error } }) => (
-          <TextField
-            autoComplete="current-password"
-            error={error != null}
-            fullWidth
-            helperText={error?.message}
-            label="Password"
-            margin="normal"
-            required
-            size="small"
-            type="password"
-            variant="outlined"
-            {...field}
-            ref={ref}
-          />
-        )}
-      />
-      <Controller
-        control={control}
-        name="confirmPassword"
-        render={({ field: { ref, ...field }, fieldState: { error } }) => (
-          <TextField
-            autoComplete="new-password"
-            error={error != null}
-            fullWidth
-            helperText={error?.message}
-            label="Confirm Password"
-            margin="normal"
-            required
-            size="small"
-            type="password"
-            variant="outlined"
-            {...field}
-            ref={ref}
-          />
-        )}
-        rules={{
-          validate: (value) =>
-            value === getValues('password') || 'The passwords do not match',
-        }}
-      />
-      <SubmitButton loading={createUserResult.loading || loginResult.loading}>
-        Sign Up
-      </SubmitButton>
-      <MaterialLink
-        className={sharedClasses.rightAlign}
-        component={Link}
-        to="/login"
-        variant="body2"
-      >
-        Already have an account? Sign In
-      </MaterialLink>
-    </Center>
+    <>
+      <Center component="form" onSubmit={handleFormSubmit}>
+        <Controller
+          control={control}
+          name="record.username"
+          render={({ field: { ref, ...field }, fieldState: { error } }) => (
+            <TextField
+              autoComplete="username"
+              autoFocus
+              error={error != null}
+              fullWidth
+              helperText={error?.message}
+              label="Username"
+              margin="normal"
+              required
+              size="small"
+              variant="outlined"
+              {...field}
+              ref={ref}
+            />
+          )}
+        />
+        <Controller
+          control={control}
+          name="password"
+          render={({ field: { ref, ...field }, fieldState: { error } }) => (
+            <TextField
+              autoComplete="current-password"
+              error={error != null}
+              fullWidth
+              helperText={error?.message}
+              label="Password"
+              margin="normal"
+              required
+              size="small"
+              type="password"
+              variant="outlined"
+              {...field}
+              ref={ref}
+            />
+          )}
+        />
+        <Controller
+          control={control}
+          name="confirmPassword"
+          render={({ field: { ref, ...field }, fieldState: { error } }) => (
+            <TextField
+              autoComplete="new-password"
+              error={error != null}
+              fullWidth
+              helperText={error?.message}
+              label="Confirm Password"
+              margin="normal"
+              required
+              size="small"
+              type="password"
+              variant="outlined"
+              {...field}
+              ref={ref}
+            />
+          )}
+          rules={{
+            validate: (value) =>
+              value === getValues('password') || 'The passwords do not match',
+          }}
+        />
+        <SubmitButton loading={createUserResult.loading || loginResult.loading}>
+          Sign Up
+        </SubmitButton>
+        <MaterialLink
+          className={sharedClasses.rightAlign}
+          component={Link}
+          to="/login"
+          variant="body2"
+        >
+          Already have an account? Sign In
+        </MaterialLink>
+      </Center>
+      <Tmdb />
+    </>
   )
 }
 

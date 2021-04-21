@@ -5,6 +5,7 @@ import { Link, RouteComponentProps } from 'react-router-dom'
 
 import Center from 'components/center/Center'
 import SubmitButton from 'components/submitButton/SubmitButton'
+import Tmdb from 'components/tmdb/Tmdb'
 import app from 'store/App'
 import useSharedStyles from 'utils/sharedStyles'
 
@@ -39,57 +40,60 @@ const Login: FC<IProps> = ({ history }) => {
   }, [])
 
   return (
-    <Center component="form" onSubmit={handleFormSubmit}>
-      <Controller
-        control={control}
-        name="username"
-        render={({ field: { ref, ...field }, fieldState: { error } }) => (
-          <TextField
-            autoComplete="username"
-            autoFocus
-            error={error != null}
-            fullWidth
-            helperText={error?.message}
-            label="Username"
-            margin="normal"
-            required
-            size="small"
-            variant="outlined"
-            {...field}
-            ref={ref}
-          />
-        )}
-      />
-      <Controller
-        control={control}
-        name="password"
-        render={({ field: { ref, ...field }, fieldState: { error } }) => (
-          <TextField
-            autoComplete="current-password"
-            error={error != null}
-            fullWidth
-            helperText={error?.message}
-            label="Password"
-            margin="normal"
-            required
-            size="small"
-            type="password"
-            variant="outlined"
-            {...field}
-            ref={ref}
-          />
-        )}
-      />
-      <SubmitButton loading={loginResult.loading}>Sign In</SubmitButton>
-      <MaterialLink
-        className={sharedClasses.rightAlign}
-        component={Link}
-        to="/register"
-        variant="body2"
-      >
-        Don&apos;t have an account? Sign Up
-      </MaterialLink>
-    </Center>
+    <>
+      <Center component="form" onSubmit={handleFormSubmit}>
+        <Controller
+          control={control}
+          name="username"
+          render={({ field: { ref, ...field }, fieldState: { error } }) => (
+            <TextField
+              autoComplete="username"
+              autoFocus
+              error={error != null}
+              fullWidth
+              helperText={error?.message}
+              label="Username"
+              margin="normal"
+              required
+              size="small"
+              variant="outlined"
+              {...field}
+              ref={ref}
+            />
+          )}
+        />
+        <Controller
+          control={control}
+          name="password"
+          render={({ field: { ref, ...field }, fieldState: { error } }) => (
+            <TextField
+              autoComplete="current-password"
+              error={error != null}
+              fullWidth
+              helperText={error?.message}
+              label="Password"
+              margin="normal"
+              required
+              size="small"
+              type="password"
+              variant="outlined"
+              {...field}
+              ref={ref}
+            />
+          )}
+        />
+        <SubmitButton loading={loginResult.loading}>Sign In</SubmitButton>
+        <MaterialLink
+          className={sharedClasses.rightAlign}
+          component={Link}
+          to="/register"
+          variant="body2"
+        >
+          Don&apos;t have an account? Sign Up
+        </MaterialLink>
+      </Center>
+      <Tmdb />
+    </>
   )
 }
 

@@ -29,7 +29,7 @@ const App: FC = () => {
             <Navigation />
             <Toolbar />
             <Container disableGutters maxWidth="sm">
-              <Box height="100%" p={2}>
+              <Box height="100%" p={2} position="relative">
                 <Routes />
               </Box>
             </Container>
