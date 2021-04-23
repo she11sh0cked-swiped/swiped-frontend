@@ -1,0 +1,20 @@
+query recommendations($count: Int!) {
+  media_recommendations(count: $count) {
+    id
+    backdrop_path
+    poster_path
+    media_type
+    ... on movie {
+      title
+    }
+    ... on tv {
+      name
+    }
+  }
+}
+
+mutation userVote($votes: [userVotesInput!]!) {
+  user_vote(votes: $votes) {
+    recordId
+  }
+}
