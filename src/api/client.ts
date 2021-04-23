@@ -44,7 +44,7 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
   if (networkError) handleNetworkError(networkError as TApolloNetworkError)
 })
 
-const whiteList = ['user_login', 'user_register']
+const whiteList = ['user_login', 'user_createOne']
 
 const authLink = new ApolloLink((operation, forward) => {
   const token = localStorage.getItem('token')
