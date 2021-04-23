@@ -166,13 +166,13 @@ const Deck: ForwardRefRenderFunction<IRef> = (_, ref) => {
       from: from(i),
     }))
 
-    handleUserVote()
-
-    void recommendationsResult.refetch().then(() =>
-      api.start((i) => ({
-        ...to(i),
-        from: from(i),
-      }))
+    void handleUserVote().then(() =>
+      recommendationsResult.refetch().then(() =>
+        api.start((i) => ({
+          ...to(i),
+          from: from(i),
+        }))
+      )
     )
   }, [api, cards.length, gone, handleUserVote, recommendationsResult])
 
