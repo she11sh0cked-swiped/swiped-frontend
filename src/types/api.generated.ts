@@ -33,6 +33,7 @@ export type CreateOnegroupPayload = {
 
 export type CreateOneuserInput = {
   username: Scalars['String'];
+  votes?: Maybe<Array<Maybe<UserVotesInput>>>;
 };
 
 export type CreateOneuserPayload = {
@@ -65,6 +66,8 @@ export type Mutation = {
   /** Create one document with mongoose defaults, setters, hooks and validation */
   user_createOne?: Maybe<CreateOneuserPayload>;
   user_login?: Maybe<Token>;
+  /** Update one document: 1) Retrieve one document by findById. 2) Apply updates to mongoose document. 3) Mongoose applies defaults, setters, hooks and validation. 4) And save it. */
+  user_updateMe?: Maybe<UpdateByIduserPayload>;
   /** Create one document with mongoose defaults, setters, hooks and validation */
   group_createOne?: Maybe<CreateOnegroupPayload>;
   /** Update one document: 1) Retrieve one document by findById. 2) Apply updates to mongoose document. 3) Mongoose applies defaults, setters, hooks and validation. 4) And save it. */
@@ -86,6 +89,11 @@ export type MutationUser_CreateOneArgs = {
 export type MutationUser_LoginArgs = {
   password: Scalars['String'];
   username: Scalars['String'];
+};
+
+
+export type MutationUser_UpdateMeArgs = {
+  record: UpdateByIduserInput;
 };
 
 
@@ -113,11 +121,24 @@ export type Query = {
   __typename?: 'Query';
   user_findMe?: Maybe<User>;
   group_findById?: Maybe<Group>;
+  media_findById?: Maybe<Media>;
+  media_findByIds?: Maybe<Array<Maybe<Media>>>;
+  media_recommendations?: Maybe<Array<Maybe<Media>>>;
 };
 
 
 export type QueryGroup_FindByIdArgs = {
   _id: Scalars['MongoID'];
+};
+
+
+export type QueryMedia_FindByIdArgs = {
+  media: MediaKeyInput;
+};
+
+
+export type QueryMedia_FindByIdsArgs = {
+  media: Array<MediaKeyInput>;
 };
 
 export type RuntimeError = ErrorInterface & {
@@ -140,6 +161,31 @@ export type UpdateByIdgroupPayload = {
   record?: Maybe<Group>;
   /** Error that may occur during operation. If you request this field in GraphQL query, you will receive typed error in payload; otherwise error will be provided in root `errors` field of GraphQL response. */
   error?: Maybe<ErrorInterface>;
+};
+
+export type UpdateByIduserInput = {
+  username?: Maybe<Scalars['String']>;
+  votes?: Maybe<Array<Maybe<UpdateByIduserVotesInput>>>;
+};
+
+export type UpdateByIduserPayload = {
+  __typename?: 'UpdateByIduserPayload';
+  /** Document ID */
+  recordId?: Maybe<Scalars['MongoID']>;
+  /** Updated document */
+  record?: Maybe<User>;
+  /** Error that may occur during operation. If you request this field in GraphQL query, you will receive typed error in payload; otherwise error will be provided in root `errors` field of GraphQL response. */
+  error?: Maybe<ErrorInterface>;
+};
+
+export type UpdateByIduserVotesInput = {
+  like?: Maybe<Scalars['Boolean']>;
+  mediaId?: Maybe<UpdateByIduserVotesMediaIdInput>;
+};
+
+export type UpdateByIduserVotesMediaIdInput = {
+  id?: Maybe<Scalars['Float']>;
+  media_type?: Maybe<Scalars['String']>;
 };
 
 export type ValidationError = ErrorInterface & {
@@ -170,6 +216,61 @@ export type Group = {
   _id: Scalars['MongoID'];
   owner?: Maybe<User>;
   members: Array<Maybe<User>>;
+  matches: Array<Match>;
+};
+
+export type Match = {
+  __typename?: 'match';
+  count?: Maybe<Scalars['Int']>;
+  media: Media;
+};
+
+export type Media = {
+  backdrop_path?: Maybe<Scalars['String']>;
+  genre_ids?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  original_language?: Maybe<Scalars['String']>;
+  overview?: Maybe<Scalars['String']>;
+  popularity?: Maybe<Scalars['Float']>;
+  poster_path?: Maybe<Scalars['String']>;
+  vote_average?: Maybe<Scalars['Float']>;
+  vote_count?: Maybe<Scalars['Int']>;
+  id: Scalars['Int'];
+  media_type: Media_Type;
+};
+
+export type MediaKey = {
+  __typename?: 'mediaKey';
+  id: Scalars['Int'];
+  media_type: Media_Type;
+};
+
+export type MediaKeyInput = {
+  id: Scalars['Int'];
+  media_type: Media_Type;
+};
+
+export enum Media_Type {
+  Movie = 'movie',
+  Tv = 'tv'
+}
+
+export type Movie = Media & {
+  __typename?: 'movie';
+  adult?: Maybe<Scalars['Boolean']>;
+  original_title?: Maybe<Scalars['String']>;
+  release_date?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']>;
+  video?: Maybe<Scalars['Boolean']>;
+  backdrop_path?: Maybe<Scalars['String']>;
+  genre_ids?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  original_language?: Maybe<Scalars['String']>;
+  overview?: Maybe<Scalars['String']>;
+  popularity?: Maybe<Scalars['Float']>;
+  poster_path?: Maybe<Scalars['String']>;
+  vote_average?: Maybe<Scalars['Float']>;
+  vote_count?: Maybe<Scalars['Int']>;
+  id: Scalars['Int'];
+  media_type: Media_Type;
 };
 
 export type Token = {
@@ -177,12 +278,48 @@ export type Token = {
   token: Scalars['String'];
 };
 
+export type Tv = Media & {
+  __typename?: 'tv';
+  first_air_date?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  origin_country?: Maybe<Scalars['String']>;
+  original_name?: Maybe<Scalars['String']>;
+  backdrop_path?: Maybe<Scalars['String']>;
+  genre_ids?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  original_language?: Maybe<Scalars['String']>;
+  overview?: Maybe<Scalars['String']>;
+  popularity?: Maybe<Scalars['Float']>;
+  poster_path?: Maybe<Scalars['String']>;
+  vote_average?: Maybe<Scalars['Float']>;
+  vote_count?: Maybe<Scalars['Int']>;
+  id: Scalars['Int'];
+  media_type: Media_Type;
+};
+
 export type User = {
   __typename?: 'user';
   username: Scalars['String'];
+  votes: Array<Vote>;
   _id: Scalars['MongoID'];
   groupsId: Array<Maybe<Scalars['MongoID']>>;
   groups: Array<Maybe<Group>>;
+};
+
+export type UserVotesInput = {
+  like?: Maybe<Scalars['Boolean']>;
+  mediaId?: Maybe<UserVotesMediaIdInput>;
+};
+
+export type UserVotesMediaIdInput = {
+  id?: Maybe<Scalars['Float']>;
+  media_type?: Maybe<Scalars['String']>;
+};
+
+export type Vote = {
+  __typename?: 'vote';
+  like: Scalars['Boolean'];
+  mediaId: MediaKey;
+  media?: Maybe<Media>;
 };
 
 export type CreateOnegroupPayloadKeySpecifier = ('recordId' | 'record' | 'error' | CreateOnegroupPayloadKeySpecifier)[];
@@ -206,19 +343,23 @@ export type MongoErrorFieldPolicy = {
 	message?: FieldPolicy<any> | FieldReadFunction<any>,
 	code?: FieldPolicy<any> | FieldReadFunction<any>
 };
-export type MutationKeySpecifier = ('user_createOne' | 'user_login' | 'group_createOne' | 'group_joinById' | 'group_leaveById' | 'group_updateById' | MutationKeySpecifier)[];
+export type MutationKeySpecifier = ('user_createOne' | 'user_login' | 'user_updateMe' | 'group_createOne' | 'group_joinById' | 'group_leaveById' | 'group_updateById' | MutationKeySpecifier)[];
 export type MutationFieldPolicy = {
 	user_createOne?: FieldPolicy<any> | FieldReadFunction<any>,
 	user_login?: FieldPolicy<any> | FieldReadFunction<any>,
+	user_updateMe?: FieldPolicy<any> | FieldReadFunction<any>,
 	group_createOne?: FieldPolicy<any> | FieldReadFunction<any>,
 	group_joinById?: FieldPolicy<any> | FieldReadFunction<any>,
 	group_leaveById?: FieldPolicy<any> | FieldReadFunction<any>,
 	group_updateById?: FieldPolicy<any> | FieldReadFunction<any>
 };
-export type QueryKeySpecifier = ('user_findMe' | 'group_findById' | QueryKeySpecifier)[];
+export type QueryKeySpecifier = ('user_findMe' | 'group_findById' | 'media_findById' | 'media_findByIds' | 'media_recommendations' | QueryKeySpecifier)[];
 export type QueryFieldPolicy = {
 	user_findMe?: FieldPolicy<any> | FieldReadFunction<any>,
-	group_findById?: FieldPolicy<any> | FieldReadFunction<any>
+	group_findById?: FieldPolicy<any> | FieldReadFunction<any>,
+	media_findById?: FieldPolicy<any> | FieldReadFunction<any>,
+	media_findByIds?: FieldPolicy<any> | FieldReadFunction<any>,
+	media_recommendations?: FieldPolicy<any> | FieldReadFunction<any>
 };
 export type RuntimeErrorKeySpecifier = ('message' | RuntimeErrorKeySpecifier)[];
 export type RuntimeErrorFieldPolicy = {
@@ -226,6 +367,12 @@ export type RuntimeErrorFieldPolicy = {
 };
 export type UpdateByIdgroupPayloadKeySpecifier = ('recordId' | 'record' | 'error' | UpdateByIdgroupPayloadKeySpecifier)[];
 export type UpdateByIdgroupPayloadFieldPolicy = {
+	recordId?: FieldPolicy<any> | FieldReadFunction<any>,
+	record?: FieldPolicy<any> | FieldReadFunction<any>,
+	error?: FieldPolicy<any> | FieldReadFunction<any>
+};
+export type UpdateByIduserPayloadKeySpecifier = ('recordId' | 'record' | 'error' | UpdateByIduserPayloadKeySpecifier)[];
+export type UpdateByIduserPayloadFieldPolicy = {
 	recordId?: FieldPolicy<any> | FieldReadFunction<any>,
 	record?: FieldPolicy<any> | FieldReadFunction<any>,
 	error?: FieldPolicy<any> | FieldReadFunction<any>
@@ -242,25 +389,91 @@ export type ValidatorErrorFieldPolicy = {
 	value?: FieldPolicy<any> | FieldReadFunction<any>,
 	idx?: FieldPolicy<any> | FieldReadFunction<any>
 };
-export type groupKeySpecifier = ('membersId' | 'name' | 'ownerId' | '_id' | 'owner' | 'members' | groupKeySpecifier)[];
+export type groupKeySpecifier = ('membersId' | 'name' | 'ownerId' | '_id' | 'owner' | 'members' | 'matches' | groupKeySpecifier)[];
 export type groupFieldPolicy = {
 	membersId?: FieldPolicy<any> | FieldReadFunction<any>,
 	name?: FieldPolicy<any> | FieldReadFunction<any>,
 	ownerId?: FieldPolicy<any> | FieldReadFunction<any>,
 	_id?: FieldPolicy<any> | FieldReadFunction<any>,
 	owner?: FieldPolicy<any> | FieldReadFunction<any>,
-	members?: FieldPolicy<any> | FieldReadFunction<any>
+	members?: FieldPolicy<any> | FieldReadFunction<any>,
+	matches?: FieldPolicy<any> | FieldReadFunction<any>
+};
+export type matchKeySpecifier = ('count' | 'media' | matchKeySpecifier)[];
+export type matchFieldPolicy = {
+	count?: FieldPolicy<any> | FieldReadFunction<any>,
+	media?: FieldPolicy<any> | FieldReadFunction<any>
+};
+export type mediaKeySpecifier = ('backdrop_path' | 'genre_ids' | 'original_language' | 'overview' | 'popularity' | 'poster_path' | 'vote_average' | 'vote_count' | 'id' | 'media_type' | mediaKeySpecifier)[];
+export type mediaFieldPolicy = {
+	backdrop_path?: FieldPolicy<any> | FieldReadFunction<any>,
+	genre_ids?: FieldPolicy<any> | FieldReadFunction<any>,
+	original_language?: FieldPolicy<any> | FieldReadFunction<any>,
+	overview?: FieldPolicy<any> | FieldReadFunction<any>,
+	popularity?: FieldPolicy<any> | FieldReadFunction<any>,
+	poster_path?: FieldPolicy<any> | FieldReadFunction<any>,
+	vote_average?: FieldPolicy<any> | FieldReadFunction<any>,
+	vote_count?: FieldPolicy<any> | FieldReadFunction<any>,
+	id?: FieldPolicy<any> | FieldReadFunction<any>,
+	media_type?: FieldPolicy<any> | FieldReadFunction<any>
+};
+export type mediaKeyKeySpecifier = ('id' | 'media_type' | mediaKeyKeySpecifier)[];
+export type mediaKeyFieldPolicy = {
+	id?: FieldPolicy<any> | FieldReadFunction<any>,
+	media_type?: FieldPolicy<any> | FieldReadFunction<any>
+};
+export type movieKeySpecifier = ('adult' | 'original_title' | 'release_date' | 'title' | 'video' | 'backdrop_path' | 'genre_ids' | 'original_language' | 'overview' | 'popularity' | 'poster_path' | 'vote_average' | 'vote_count' | 'id' | 'media_type' | movieKeySpecifier)[];
+export type movieFieldPolicy = {
+	adult?: FieldPolicy<any> | FieldReadFunction<any>,
+	original_title?: FieldPolicy<any> | FieldReadFunction<any>,
+	release_date?: FieldPolicy<any> | FieldReadFunction<any>,
+	title?: FieldPolicy<any> | FieldReadFunction<any>,
+	video?: FieldPolicy<any> | FieldReadFunction<any>,
+	backdrop_path?: FieldPolicy<any> | FieldReadFunction<any>,
+	genre_ids?: FieldPolicy<any> | FieldReadFunction<any>,
+	original_language?: FieldPolicy<any> | FieldReadFunction<any>,
+	overview?: FieldPolicy<any> | FieldReadFunction<any>,
+	popularity?: FieldPolicy<any> | FieldReadFunction<any>,
+	poster_path?: FieldPolicy<any> | FieldReadFunction<any>,
+	vote_average?: FieldPolicy<any> | FieldReadFunction<any>,
+	vote_count?: FieldPolicy<any> | FieldReadFunction<any>,
+	id?: FieldPolicy<any> | FieldReadFunction<any>,
+	media_type?: FieldPolicy<any> | FieldReadFunction<any>
 };
 export type tokenKeySpecifier = ('token' | tokenKeySpecifier)[];
 export type tokenFieldPolicy = {
 	token?: FieldPolicy<any> | FieldReadFunction<any>
 };
-export type userKeySpecifier = ('username' | '_id' | 'groupsId' | 'groups' | userKeySpecifier)[];
+export type tvKeySpecifier = ('first_air_date' | 'name' | 'origin_country' | 'original_name' | 'backdrop_path' | 'genre_ids' | 'original_language' | 'overview' | 'popularity' | 'poster_path' | 'vote_average' | 'vote_count' | 'id' | 'media_type' | tvKeySpecifier)[];
+export type tvFieldPolicy = {
+	first_air_date?: FieldPolicy<any> | FieldReadFunction<any>,
+	name?: FieldPolicy<any> | FieldReadFunction<any>,
+	origin_country?: FieldPolicy<any> | FieldReadFunction<any>,
+	original_name?: FieldPolicy<any> | FieldReadFunction<any>,
+	backdrop_path?: FieldPolicy<any> | FieldReadFunction<any>,
+	genre_ids?: FieldPolicy<any> | FieldReadFunction<any>,
+	original_language?: FieldPolicy<any> | FieldReadFunction<any>,
+	overview?: FieldPolicy<any> | FieldReadFunction<any>,
+	popularity?: FieldPolicy<any> | FieldReadFunction<any>,
+	poster_path?: FieldPolicy<any> | FieldReadFunction<any>,
+	vote_average?: FieldPolicy<any> | FieldReadFunction<any>,
+	vote_count?: FieldPolicy<any> | FieldReadFunction<any>,
+	id?: FieldPolicy<any> | FieldReadFunction<any>,
+	media_type?: FieldPolicy<any> | FieldReadFunction<any>
+};
+export type userKeySpecifier = ('username' | 'votes' | '_id' | 'groupsId' | 'groups' | userKeySpecifier)[];
 export type userFieldPolicy = {
 	username?: FieldPolicy<any> | FieldReadFunction<any>,
+	votes?: FieldPolicy<any> | FieldReadFunction<any>,
 	_id?: FieldPolicy<any> | FieldReadFunction<any>,
 	groupsId?: FieldPolicy<any> | FieldReadFunction<any>,
 	groups?: FieldPolicy<any> | FieldReadFunction<any>
+};
+export type voteKeySpecifier = ('like' | 'mediaId' | 'media' | voteKeySpecifier)[];
+export type voteFieldPolicy = {
+	like?: FieldPolicy<any> | FieldReadFunction<any>,
+	mediaId?: FieldPolicy<any> | FieldReadFunction<any>,
+	media?: FieldPolicy<any> | FieldReadFunction<any>
 };
 export type TypedTypePolicies = TypePolicies & {
 	CreateOnegroupPayload?: Omit<TypePolicy, "fields" | "keyFields"> & {
@@ -295,6 +508,10 @@ export type TypedTypePolicies = TypePolicies & {
 		keyFields?: false | UpdateByIdgroupPayloadKeySpecifier | (() => undefined | UpdateByIdgroupPayloadKeySpecifier),
 		fields?: UpdateByIdgroupPayloadFieldPolicy,
 	},
+	UpdateByIduserPayload?: Omit<TypePolicy, "fields" | "keyFields"> & {
+		keyFields?: false | UpdateByIduserPayloadKeySpecifier | (() => undefined | UpdateByIduserPayloadKeySpecifier),
+		fields?: UpdateByIduserPayloadFieldPolicy,
+	},
 	ValidationError?: Omit<TypePolicy, "fields" | "keyFields"> & {
 		keyFields?: false | ValidationErrorKeySpecifier | (() => undefined | ValidationErrorKeySpecifier),
 		fields?: ValidationErrorFieldPolicy,
@@ -307,12 +524,36 @@ export type TypedTypePolicies = TypePolicies & {
 		keyFields?: false | groupKeySpecifier | (() => undefined | groupKeySpecifier),
 		fields?: groupFieldPolicy,
 	},
+	match?: Omit<TypePolicy, "fields" | "keyFields"> & {
+		keyFields?: false | matchKeySpecifier | (() => undefined | matchKeySpecifier),
+		fields?: matchFieldPolicy,
+	},
+	media?: Omit<TypePolicy, "fields" | "keyFields"> & {
+		keyFields?: false | mediaKeySpecifier | (() => undefined | mediaKeySpecifier),
+		fields?: mediaFieldPolicy,
+	},
+	mediaKey?: Omit<TypePolicy, "fields" | "keyFields"> & {
+		keyFields?: false | mediaKeyKeySpecifier | (() => undefined | mediaKeyKeySpecifier),
+		fields?: mediaKeyFieldPolicy,
+	},
+	movie?: Omit<TypePolicy, "fields" | "keyFields"> & {
+		keyFields?: false | movieKeySpecifier | (() => undefined | movieKeySpecifier),
+		fields?: movieFieldPolicy,
+	},
 	token?: Omit<TypePolicy, "fields" | "keyFields"> & {
 		keyFields?: false | tokenKeySpecifier | (() => undefined | tokenKeySpecifier),
 		fields?: tokenFieldPolicy,
 	},
+	tv?: Omit<TypePolicy, "fields" | "keyFields"> & {
+		keyFields?: false | tvKeySpecifier | (() => undefined | tvKeySpecifier),
+		fields?: tvFieldPolicy,
+	},
 	user?: Omit<TypePolicy, "fields" | "keyFields"> & {
 		keyFields?: false | userKeySpecifier | (() => undefined | userKeySpecifier),
 		fields?: userFieldPolicy,
+	},
+	vote?: Omit<TypePolicy, "fields" | "keyFields"> & {
+		keyFields?: false | voteKeySpecifier | (() => undefined | voteKeySpecifier),
+		fields?: voteFieldPolicy,
 	}
 };
