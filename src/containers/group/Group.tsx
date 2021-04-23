@@ -63,7 +63,10 @@ const Group: FC<IProps> = ({
         <Typography variant="h4">{group?.name}</Typography>
         <JoinLeaveButton group={group} user={user} />
       </Grid>
-      <List groupId={groupId} />
+      <List
+        matches={group?.matches ?? []}
+        membersCount={group?.membersId?.length ?? 0}
+      />
     </Box>
   )
 }

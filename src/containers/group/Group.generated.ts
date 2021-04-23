@@ -13,6 +13,17 @@ export type GroupQuery = (
   & { group_findById?: Types.Maybe<(
     { __typename?: 'group' }
     & Pick<Types.Group, '_id' | 'name' | 'ownerId' | 'membersId'>
+    & { matches: Array<(
+      { __typename?: 'match' }
+      & Pick<Types.Match, 'count'>
+      & { media: (
+        { __typename?: 'movie' }
+        & Pick<Types.Movie, 'title' | 'id' | 'backdrop_path' | 'poster_path' | 'media_type'>
+      ) | (
+        { __typename?: 'tv' }
+        & Pick<Types.Tv, 'name' | 'id' | 'backdrop_path' | 'poster_path' | 'media_type'>
+      ) }
+    )> }
   )> }
 );
 
@@ -35,6 +46,21 @@ export const GroupDocument = gql`
     name
     ownerId
     membersId
+    matches {
+      media {
+        id
+        backdrop_path
+        poster_path
+        media_type
+        ... on movie {
+          title
+        }
+        ... on tv {
+          name
+        }
+      }
+      count
+    }
   }
 }
     `;

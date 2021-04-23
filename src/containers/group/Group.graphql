@@ -4,6 +4,21 @@ query group($id: MongoID!) {
     name
     ownerId
     membersId
+    matches {
+      media {
+        id
+        backdrop_path
+        poster_path
+        media_type
+        ... on movie {
+          title
+        }
+        ... on tv {
+          name
+        }
+      }
+      count
+    }
   }
 }
 

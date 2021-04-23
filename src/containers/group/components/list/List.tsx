@@ -9,10 +9,11 @@ import {
 import { red } from '@material-ui/core/colors'
 import { Favorite } from '@material-ui/icons'
 import { Rating } from '@material-ui/lab'
-import { FC, useMemo, useState } from 'react'
+import { FC } from 'react'
 
 import ImageCard from 'components/imageCard/ImageCard'
-import * as mock from 'utils/mock'
+import { Group, Movie, Tv } from 'types/api.generated'
+import getTMDBImage from 'utils/getTMDBImage'
 import styledBy from 'utils/styledBy'
 
 import useStyles from './List.styles'
@@ -27,37 +28,32 @@ const StyledRating = withStyles({
 })(Rating)
 
 interface IProps {
-  groupId: string
+  matches: Group['matches']
+  membersCount: number
 }
 
-const List: FC<IProps> = () => {
+const List: FC<IProps> = ({ matches, membersCount }) => {
   const classes = useStyles()
-
-  const [movies] = useState(mock.movies())
-
-  const matches = useMemo(
-    () =>
-      movies
-        .map((data) => ({
-          data,
-          likes: Math.floor(2 + Math.random() * 9),
-        }))
-        .sort((a, b) => b.likes - a.likes),
-    [movies]
-  )
 
   return (
     <MaterialList>
       {matches.map((match) => {
-        const rating = (match.likes / 10) * 5
+        const rating = ((match.count ?? 1) / membersCount) * 5
+
+        const image = match.media.backdrop_path ?? match.media.poster_path ?? ''
+        const title =
+          (match.media as Movie).title ?? (match.media as Tv).name ?? ''
 
         return (
-          <ListItem disableGutters key={match.data.id}>
-            <ImageCard className={classes.card} image={match.data.image}>
+          <ListItem disableGutters key={match.media.id}>
+            <ImageCard
+              className={classes.card}
+              image={getTMDBImage(image, 'w780')}
+            >
               <CardActionArea>
                 <CardContent>
                   <Typography component="h2" variant="h5">
-                    {match.data.title}
+                    {title}
                   </Typography>
                   <div className={classes.rating}>
                     <StyledRating
@@ -67,7 +63,7 @@ const List: FC<IProps> = () => {
                       readOnly
                       value={rating}
                     />
-                    <Typography>{match.likes} likes</Typography>
+                    <Typography>{match.count} likes</Typography>
                   </div>
                 </CardContent>
               </CardActionArea>
