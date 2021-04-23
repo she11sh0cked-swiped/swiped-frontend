@@ -12,10 +12,10 @@ export type RecommendationsQuery = (
   { __typename?: 'Query' }
   & { media_recommendations?: Types.Maybe<Array<Types.Maybe<(
     { __typename?: 'movie' }
-    & Pick<Types.Movie, 'title' | 'id' | 'backdrop_path' | 'poster_path' | 'media_type'>
+    & Pick<Types.Movie, 'title' | 'id' | 'poster_path' | 'media_type'>
   ) | (
     { __typename?: 'tv' }
-    & Pick<Types.Tv, 'name' | 'id' | 'backdrop_path' | 'poster_path' | 'media_type'>
+    & Pick<Types.Tv, 'name' | 'id' | 'poster_path' | 'media_type'>
   )>>> }
 );
 
@@ -37,7 +37,6 @@ export const RecommendationsDocument = gql`
     query recommendations($count: Int!) {
   media_recommendations(count: $count) {
     id
-    backdrop_path
     poster_path
     media_type
     ... on movie {

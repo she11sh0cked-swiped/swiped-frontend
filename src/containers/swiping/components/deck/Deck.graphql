@@ -1,7 +1,6 @@
 query recommendations($count: Int!) {
   media_recommendations(count: $count) {
     id
-    backdrop_path
     poster_path
     media_type
     ... on movie {
